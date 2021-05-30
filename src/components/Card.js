@@ -1,7 +1,8 @@
-function Card({ card, user, handleBook, onCardDelete, isRegistrationOpen }) {
+function Card({ teacher, user, handleBook, onCardDelete, isRegistrationOpen }) {
   function handleCardDelete() {
-    onCardDelete(card);
+    onCardDelete(teacher);
   }
+  const clients = teacher.clients ? teacher.clients.length : 0;
   return (
     <div className="mdl-card assistent-card mdl-shadow--2dp">
       <button
@@ -14,46 +15,44 @@ function Card({ card, user, handleBook, onCardDelete, isRegistrationOpen }) {
       <div className="mdl-card__media mdl-card--expand">
         <img
           className="assistent-card__image"
-          src={card.photoURL}
-          alt={card.name}
+          src={teacher.photoUrl}
+          alt={teacher.name}
         />
       </div>
       <div className="mdl-card__title">
-        <h2 className="mdl-card__title-text">{card.name}</h2>
+        <h2 className="mdl-card__title-text">{teacher.name}</h2>
       </div>
       <div className="mdl-card__menu">
         <span
           className="mdl-badge mdl-badge--dark-background"
-          data-badge={card.dances}
+          data-badge={2 - clients}
         >
           Свободно проходов
         </span>
       </div>
       <div className="mdl-card__supporting-text">
-        {card.isGuest
-          ? "Ассистент Adornos Center. Стоимость прохода - 2000 рублей."
-          : "Приглашённый ассистент. Стоимость прохода - 1000 рублей."}
+        {teacher.isGuest
+          ? "Приглашённый ассистент. Стоимость прохода - 1000 рублей."
+          : "Ассистент Adornos Center. Стоимость прохода - 2000 рублей."}
       </div>
       <div className="mdl-card__actions mdl-card--border">
         <button
           className="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
-          disabled={
-            card.clients.length > 1 && !card.isBookedByMe && !isRegistrationOpen
-          }
+          disabled={clients > 1 && !teacher.isBookedByMe && !isRegistrationOpen}
           onClick={handleBook}
         >
-          {card.isBookedByMe && "Отказаться"}
-          {card.clients.length > 1 && !card.isBookedByMe
+          {teacher.isBookedByMe && "Отказаться"}
+          {clients > 1 && !teacher.isBookedByMe
             ? "Запись закрыта"
             : "Записаться"}
         </button>
 
         <div>
-          {card.clients.length > 0 &&
-            card.clients.map((client) => {
+          {clients > 0 &&
+            teacher.clients.map((client) => {
               return (
-                <p key={client.id} className="assistent-card--person">
-                  {client.name}
+                <p key={client.clientId} className="assistent-card--person">
+                  {client.clientName}
                 </p>
               );
             })}

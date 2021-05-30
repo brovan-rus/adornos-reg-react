@@ -8,6 +8,7 @@ import AddUserPopup from "./AddUserPopup";
 import LoginPopup from "./LoginPopup";
 import ChangeDatePopup from "./ChangeDatePopup";
 import { dateFormat } from "../utils/utils";
+import api from "../utils/api";
 
 function App() {
   const [lessonDate, setLessonDate] = React.useState("31 мая 2020");
@@ -20,6 +21,8 @@ function App() {
   const [isRegistrationOpen, setIsRegistrationOpen] = React.useState(false);
   const [isLoggedIn, setIsLoggedIn] = React.useState(false);
   const [practicDate, setPracticDate] = React.useState();
+  const [teachersList, setTeachersList] = React.useState([]);
+
   const handleOpenAddUserPopup = () => {
     setIsAddUserPopupOpen(true);
   };
@@ -61,6 +64,16 @@ function App() {
     }
   }, [practicDate, isLoggedIn]);
 
+  React.useEffect(() => {
+    api
+      .getTeachersList()
+      .then((answer) => {
+        setTeachersList(answer);
+        console.log(answer);
+      })
+      .catch((err) => console.log(err));
+  }, []);
+
   const card = {
     name: "Кирилл Паршаков",
     dances: 2,
@@ -97,11 +110,16 @@ function App() {
             />
             <div className="mdl-cell--12-col">
               <section className="cards">
-                <Card
-                  card={card}
-                  user={user}
-                  isRegistrationOpen={isRegistrationOpen}
-                />
+                {teachersList.map((teacher) => {
+                  return (
+                    <Card
+                      teacher={teacher}
+                      key={teacher._id}
+                      user={user}
+                      isRegistrationOpen={isRegistrationOpen}
+                    />
+                  );
+                })}
               </section>
             </div>
           </div>
