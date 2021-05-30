@@ -1,0 +1,28 @@
+.popup__approve-button {
+  width: 358px;
+  height: 50px;
+  background-color: #000;
+  font-family: 'Inter', 'Arial', 'Helvetica', sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 18px;
+  line-height: 22px;
+  color: #fff;
+  text-align: center;
+  transition: opacity 0.3s linear;
+  border: 0;
+
+}
+
+.popup__approve-button:hover{
+  cursor: pointer;
+  opacity: .8;
+}
+
+@media screen and (max-width: 520px){
+  .popup__approve-button {
+    width: 238px;
+    font-size: 14px;
+    line-height: 17px;
+  }
+}
