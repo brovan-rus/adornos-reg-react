@@ -16,7 +16,12 @@ function AddTeacherPopup({ isOpen, onClose, onTeacherAdd }) {
   };
   const handleSubmit = (e) => {
     e.preventDefault();
-    onTeacherAdd(name, url, isGuest);
+    const teacher = {
+      name: name,
+      photoUrl: url,
+      isGuest: isGuest,
+    };
+    onTeacherAdd(teacher);
   };
 
   React.useEffect(() => {
@@ -53,7 +58,6 @@ function AddTeacherPopup({ isOpen, onClose, onTeacherAdd }) {
         required
         autoComplete="off"
         minLength="2"
-        maxLength="30"
         type="text"
         name="url"
         placeholder="Ссылка на URL адрес фотографии"

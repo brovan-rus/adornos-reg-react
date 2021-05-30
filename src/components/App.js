@@ -51,6 +51,24 @@ function App() {
     closeAllPopups();
   };
 
+  const handleTeacherDel = (teacher) => {
+    api
+      .removeTeacherCard(teacher._id)
+      .then(() =>
+        setTeachersList((state) => state.filter((c) => c._id !== teacher._id))
+      )
+      .catch((e) => console.log(e));
+  };
+
+  const handleAddTeacher = (teacher) => {
+    api
+      .addTeacherCard(teacher)
+      .then((newTeacher) => {
+        setTeachersList([newTeacher, ...teachersList]);
+      })
+      .catch((e) => console.log(e));
+  };
+
   React.useEffect(() => {
     const registrationStartDate = new Date(practicDate);
     registrationStartDate.setDate(registrationStartDate.getDate() - 7);
@@ -110,13 +128,14 @@ function App() {
             />
             <div className="mdl-cell--12-col">
               <section className="cards">
-                {teachersList.map((teacher) => {
+                {teachersList.map((teacher, i) => {
                   return (
                     <Card
                       teacher={teacher}
                       key={teacher._id}
                       user={user}
                       isRegistrationOpen={isRegistrationOpen}
+                      onCardDelete={handleTeacherDel}
                     />
                   );
                 })}
@@ -129,6 +148,7 @@ function App() {
       <AddTeacherPopup
         isOpen={isTeacherAddPopupOpen}
         onClose={closeAllPopups}
+        onTeacherAdd={handleAddTeacher}
       />
       <AddUserPopup isOpen={isAddUserPopupOpen} onClose={closeAllPopups} />
       <LoginPopup isOpen={isLoginPopupOpen} onClose={closeAllPopups} />

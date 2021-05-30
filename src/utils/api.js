@@ -7,9 +7,32 @@ class Api {
     this._url = url;
   }
 
-  getTeachersList = () => {
+  getTeachersList() {
     return fetch(`${this._url}/teacher`, {}).then(handleResponse);
-  };
+  }
+
+  removeTeacherCard(teacherId) {
+    return fetch(`${this._url}/teacher/${teacherId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).then(handleResponse);
+  }
+
+  addTeacherCard(teacher) {
+    return fetch(`${this._url}/teacher/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: teacher.name,
+        isGuest: teacher.isGuest,
+        photoUrl: teacher.photoUrl,
+      }),
+    }).then(handleResponse);
+  }
 }
 
 const api = new Api(baseURL);
