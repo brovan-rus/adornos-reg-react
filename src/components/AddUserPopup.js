@@ -1,7 +1,7 @@
 import React from "react";
 import PopupWithForm from "./PopupWithForm";
 
-function AddTeacherPopup({ isOpen, onClose, onUserAdd }) {
+function AddTeacherPopup({ isOpen, onClose, onUserAdd, addUserButtonText }) {
   const [fullName, setFullName] = React.useState("");
   const [userName, setUserName] = React.useState(false);
   const [password, setPassword] = React.useState();
@@ -17,18 +17,24 @@ function AddTeacherPopup({ isOpen, onClose, onUserAdd }) {
   };
   const handleSubmit = (e) => {
     e.preventDefault();
-    onUserAdd(userName, fullName, password);
+    const user = {
+      userName: userName,
+      fullName: fullName,
+      password: password,
+    };
+    onUserAdd(user);
   };
 
   React.useEffect(() => {
     setPassword("");
     setUserName("");
+    setFullName("");
   }, [isOpen]);
 
   return (
     <PopupWithForm
       title="Добавить клиента"
-      submitButtonText="Добавить"
+      submitButtonText={addUserButtonText}
       content="user-add"
       isOpen={isOpen}
       onClose={onClose}

@@ -26,6 +26,7 @@ function AddTeacherPopup({ isOpen, onClose, onTeacherAdd }) {
 
   React.useEffect(() => {
     setName("");
+    setUrl("");
     setIsGuest(false);
   }, [isOpen]);
 

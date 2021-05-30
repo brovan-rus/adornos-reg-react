@@ -33,6 +33,20 @@ class Api {
       }),
     }).then(handleResponse);
   }
+
+  addUser(user) {
+    return fetch(`${this._url}/sign-up`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        userName: user.userName,
+        fullName: user.fullName,
+        password: user.password,
+      }),
+    }).then(handleResponse);
+  }
 }
 
 const api = new Api(baseURL);

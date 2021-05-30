@@ -12,6 +12,7 @@ import api from "../utils/api";
 
 function App() {
   const [lessonDate, setLessonDate] = React.useState("31 мая 2020");
+  const [addUserButtonText, setAddUserButtonText] = React.useState("Добавить");
   const [isTeacherAddPopupOpen, setIsTeacherAddPopupOpen] =
     React.useState(false);
   const [isLoginPopupOpen, setIsLoginPopupOpen] = React.useState(false);
@@ -66,7 +67,21 @@ function App() {
       .then((newTeacher) => {
         setTeachersList([newTeacher, ...teachersList]);
       })
+      .then(closeAllPopups)
       .catch((e) => console.log(e));
+  };
+
+  const handleUserAdd = (user) => {
+    api
+      .addUser(user)
+      .then((res) => {
+        console.log(res);
+        setAddUserButtonText("Добавлен");
+      })
+      .catch((e) => {
+        console.log(e);
+        setAddUserButtonText("Произошла ошибка");
+      });
   };
 
   React.useEffect(() => {
@@ -150,7 +165,12 @@ function App() {
         onClose={closeAllPopups}
         onTeacherAdd={handleAddTeacher}
       />
-      <AddUserPopup isOpen={isAddUserPopupOpen} onClose={closeAllPopups} />
+      <AddUserPopup
+        isOpen={isAddUserPopupOpen}
+        onClose={closeAllPopups}
+        onUserAdd={handleUserAdd}
+        addUserButtonText={addUserButtonText}
+      />
       <LoginPopup isOpen={isLoginPopupOpen} onClose={closeAllPopups} />
       <ChangeDatePopup
         isOpen={isDateChangePopupOpen}
