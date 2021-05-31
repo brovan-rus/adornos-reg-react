@@ -109,23 +109,34 @@ function App() {
 
   const handleTeacherBook = (teacher) => {
     api
-      .addClient(teacher._id, currentUser.userId, currentUser.fullName)
-      .then((updatedTeacherCard) => {
-        setTeachersList((state) =>
-          state.map((t) => (t._id === teacher._id ? updatedTeacherCard : t))
-        );
-      })
+      .userRemoveBookPossibility(currentUser.userId)
+      .then((res) => console.log(res))
+      .then(() =>
+        api
+          .addClient(teacher._id, currentUser.userId, currentUser.fullName)
+          .then((updatedTeacherCard) => {
+            setTeachersList((state) =>
+              state.map((t) => (t._id === teacher._id ? updatedTeacherCard : t))
+            );
+          })
+          .catch((e) => console.log(e))
+      )
       .catch((e) => console.log(e));
   };
 
   const handleTeacherUnbook = (teacher) => {
     api
-      .removeClient(teacher._id, currentUser.userId)
-      .then((updatedTeacherCard) => {
-        setTeachersList((state) =>
-          state.map((t) => (t._id === teacher._id ? updatedTeacherCard : t))
-        );
-      })
+      .userAddBookPossibility(currentUser.userId)
+      .then(() =>
+        api
+          .removeClient(teacher._id, currentUser.userId)
+          .then((updatedTeacherCard) => {
+            setTeachersList((state) =>
+              state.map((t) => (t._id === teacher._id ? updatedTeacherCard : t))
+            );
+          })
+          .catch((e) => console.log(e))
+      )
       .catch((e) => console.log(e));
   };
 

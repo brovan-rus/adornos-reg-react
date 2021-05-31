@@ -106,9 +106,22 @@ class Api {
     }).then(handleResponse);
   }
 
-  changeBookTeacherStatus(teacherId, clientId, clientName, isBookedByMe) {
-    if (!isBookedByMe) return this.addClient(teacherId, clientId, clientName);
-    else return this.removeClient(teacherId, clientId);
+  userAddBookPossibility(userId) {
+    return fetch(`${this._url}/user/${userId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).then(handleResponse);
+  }
+
+  userRemoveBookPossibility(userId) {
+    return fetch(`${this._url}/user/${userId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).then(handleResponse);
   }
 }
 
