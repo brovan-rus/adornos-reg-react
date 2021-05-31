@@ -92,7 +92,8 @@ function App() {
       .catch((e) => {
         console.log(e);
         setAddUserButtonText("Произошла ошибка");
-      });
+      })
+      .finally(closeAllPopups);
   };
 
   const handleLogin = (user) => {
@@ -109,11 +110,13 @@ function App() {
 
   const handleTeacherBook = (teacher) => {
     api
-      .userRemoveBookPossibility(currentUser.userId)
-      .then((res) => console.log(res))
+      .userRemoveBookPossibility(currentUser._id)
+      .then((updatedUser) => {
+        setCurrentUser(updatedUser[0]);
+      })
       .then(() =>
         api
-          .addClient(teacher._id, currentUser.userId, currentUser.fullName)
+          .addClient(teacher._id, currentUser._id, currentUser.fullName)
           .then((updatedTeacherCard) => {
             setTeachersList((state) =>
               state.map((t) => (t._id === teacher._id ? updatedTeacherCard : t))
@@ -126,10 +129,13 @@ function App() {
 
   const handleTeacherUnbook = (teacher) => {
     api
-      .userAddBookPossibility(currentUser.userId)
+      .userAddBookPossibility(currentUser._id)
+      .then((updatedUser) => {
+        setCurrentUser(updatedUser[0]);
+      })
       .then(() =>
         api
-          .removeClient(teacher._id, currentUser.userId)
+          .removeClient(teacher._id, currentUser._id)
           .then((updatedTeacherCard) => {
             setTeachersList((state) =>
               state.map((t) => (t._id === teacher._id ? updatedTeacherCard : t))

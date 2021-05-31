@@ -11,21 +11,15 @@ function Card({
     onCardDelete(teacher);
   }
   const clients = teacher.clients ? teacher.clients.length : 0;
-  // const isButtonDisabled =
-  //   clients > 1 && !teacher.isBookedByMe && !isRegistrationOpen && !isLoggedIn;
-  const isButtonActive = isLoggedIn && !(clients > 1) && isRegistrationOpen;
+  const haveBookPossibility = user.tickets > 0;
+  console.log(user.tickets);
+
+  const isButtonActive =
+    isLoggedIn && !(clients > 1) && isRegistrationOpen && haveBookPossibility;
 
   const isBookedByMe =
     clients > 0 &&
-    teacher.clients.some((client) => client.clientId === user.userId);
-
-  // console.log(teacher.clients.some((client) => client._id === user.userId));
-
-  // console.log(isBookedByMe);
-
-  // card.likes.some(
-  //   (like) => like._id === currentUser.userId
-  // );
+    teacher.clients.some((client) => client.clientId === user._id);
 
   const handleBook = () => {
     onTeacherBook(teacher, isBookedByMe);
