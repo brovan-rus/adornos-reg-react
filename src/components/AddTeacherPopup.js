@@ -1,7 +1,7 @@
 import React from "react";
 import PopupWithForm from "./PopupWithForm";
 
-function AddTeacherPopup({ isOpen, onClose, onTeacherAdd }) {
+function AddTeacherPopup({ isOpen, onClose, onTeacherAdd, buttonText }) {
   const [name, setName] = React.useState();
   const [isGuest, setIsGuest] = React.useState();
   const [url, setUrl] = React.useState();
@@ -33,7 +33,7 @@ function AddTeacherPopup({ isOpen, onClose, onTeacherAdd }) {
   return (
     <PopupWithForm
       title="Добавить преподавателя"
-      submitButtonText="Добавить"
+      submitButtonText={buttonText}
       content="teacher-add"
       isOpen={isOpen}
       onClose={onClose}

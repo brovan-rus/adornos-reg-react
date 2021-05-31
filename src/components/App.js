@@ -14,6 +14,9 @@ function App() {
   const [lessonDate, setLessonDate] = React.useState(undefined);
   const [currentUser, setCurrentUser] = React.useState({ isAmin: false });
   const [addUserButtonText, setAddUserButtonText] = React.useState("Добавить");
+  const [addTeacherButtonText, setAddTeacherButtonText] =
+    React.useState("Добавить");
+  const [loginButtonText, setLoginButtonText] = React.useState("Войти");
   const [isTeacherAddPopupOpen, setIsTeacherAddPopupOpen] =
     React.useState(false);
   const [isLoginPopupOpen, setIsLoginPopupOpen] = React.useState(false);
@@ -29,9 +32,11 @@ function App() {
     setIsAddUserPopupOpen(true);
   };
   const handleOpenAddTeacherPopup = () => {
+    setAddTeacherButtonText("Добавить");
     setIsTeacherAddPopupOpen(true);
   };
   const handleOpenLoginPopup = () => {
+    setLoginButtonText("Войти");
     setIsLoginPopupOpen(true);
   };
   const handleOpenDateChangePopup = () => {
@@ -58,18 +63,41 @@ function App() {
       .then((res) => {
         console.log(res);
         setDate(practicDate);
+        teachersList.forEach((teacher) => {
+          console.log(teacher);
+          handleTeacherDel(teacher);
+        });
       })
       .catch((e) => console.log(e))
       .finally(closeAllPopups);
   };
 
   const handleTeacherDel = (teacher) => {
-    api
-      .removeTeacherCard(teacher._id)
-      .then(() =>
-        setTeachersList((state) => state.filter((c) => c._id !== teacher._id))
-      )
-      .catch((e) => console.log(e));
+    if (teacher.clients) {
+      teacher.clients.forEach((client) => {
+        api
+          .userAddBookPossibility(client.clientId)
+          .then((res) => console.log(res))
+          .catch((e) => console.log(e));
+      });
+      api
+        .removeTeacherCard(teacher._id)
+        .then(() => {
+          setTeachersList((state) =>
+            state.filter((c) => c._id !== teacher._id)
+          );
+        })
+        .catch((e) => console.log(e));
+    } else {
+      api
+        .removeTeacherCard(teacher._id)
+        .then(() => {
+          setTeachersList((state) =>
+            state.filter((c) => c._id !== teacher._id)
+          );
+        })
+        .catch((e) => console.log(e));
+    }
   };
 
   const handleAddTeacher = (teacher) => {
@@ -79,7 +107,10 @@ function App() {
         setTeachersList([newTeacher, ...teachersList]);
       })
       .then(closeAllPopups)
-      .catch((e) => console.log(e));
+      .catch((e) => {
+        console.log(e);
+        setAddTeacherButtonText("Заполните все поля");
+      });
   };
 
   const handleUserAdd = (user) => {
@@ -89,11 +120,11 @@ function App() {
         console.log(res);
         setAddUserButtonText("Добавлен");
       })
+      .then(closeAllPopups)
       .catch((e) => {
         console.log(e);
         setAddUserButtonText("Произошла ошибка");
-      })
-      .finally(closeAllPopups);
+      });
   };
 
   const handleLogin = (user) => {
@@ -105,7 +136,10 @@ function App() {
         console.log(currentUser);
       })
       .then(closeAllPopups)
-      .catch((e) => console.log(e));
+      .catch((e) => {
+        console.log(e);
+        setLoginButtonText("Неправильное имя пользователя или пароль");
+      });
   };
 
   const handleTeacherBook = (teacher) => {
@@ -178,11 +212,6 @@ function App() {
       .catch((e) => console.log(e));
   }, []);
 
-  const user = {
-    name: "Анна Ли",
-    isAdmin: true,
-  };
-
   return (
     <div className="mdl-layout mdl-js-layout mdl-layout--fixed-header">
       <Header
@@ -200,6 +229,7 @@ function App() {
               date={lessonDate}
               isAdmin={currentUser.isAdmin}
               handleOpenDateChangePopup={handleOpenDateChangePopup}
+              isRegistrationOpen={isRegistrationOpen}
             />
             <div className="mdl-cell--12-col">
               <section className="cards">
@@ -227,6 +257,7 @@ function App() {
         isOpen={isTeacherAddPopupOpen}
         onClose={closeAllPopups}
         onTeacherAdd={handleAddTeacher}
+        buttonText={addTeacherButtonText}
       />
       <AddUserPopup
         isOpen={isAddUserPopupOpen}
@@ -238,11 +269,13 @@ function App() {
         isOpen={isLoginPopupOpen}
         onClose={closeAllPopups}
         onLogin={handleLogin}
+        buttonText={loginButtonText}
       />
       <ChangeDatePopup
         isOpen={isDateChangePopupOpen}
         onClose={closeAllPopups}
         onDateChange={handleChangeDate}
+        curretDate={practicDate}
       />
     </div>
   );

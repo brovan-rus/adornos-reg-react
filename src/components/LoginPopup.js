@@ -1,7 +1,7 @@
 import React from "react";
 import PopupWithForm from "./PopupWithForm";
 
-function LoginPopup({ isOpen, onClose, onLogin }) {
+function LoginPopup({ isOpen, onClose, onLogin, buttonText }) {
   const [userName, setUserName] = React.useState(false);
   const [password, setPassword] = React.useState();
 
@@ -23,12 +23,12 @@ function LoginPopup({ isOpen, onClose, onLogin }) {
   React.useEffect(() => {
     setPassword("");
     setUserName("");
-  }, [isOpen]);
+  }, [isOpen, buttonText]);
 
   return (
     <PopupWithForm
       title="Войти"
-      submitButtonText="Войти"
+      submitButtonText={buttonText}
       content="login"
       isOpen={isOpen}
       onClose={onClose}

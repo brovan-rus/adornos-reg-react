@@ -1,6 +1,6 @@
 import { handleResponse } from "./utils";
 
-const baseURL = "http://localhost:8000";
+const baseURL = "https://adornos-api.herokuapp.com";
 
 class Api {
   constructor(url) {
@@ -118,6 +118,15 @@ class Api {
   userRemoveBookPossibility(userId) {
     return fetch(`${this._url}/user/${userId}`, {
       method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).then(handleResponse);
+  }
+
+  resetUsersBookPossibilities() {
+    return fetch(`${this._url}/users`, {
+      method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },

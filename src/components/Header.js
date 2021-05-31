@@ -22,6 +22,12 @@ function Header({
               </a>
             )}
 
+            {isLoggedIn && (
+              <a className="mdl-navigation__link link" href="/">
+                Выйти
+              </a>
+            )}
+
             {isAdmin && (
               <a
                 className="mdl-navigation__link link"
@@ -53,9 +59,13 @@ function Header({
               Войти
             </a>
           )}
-          {/*<a className="mdl-navigation__link link" href="">*/}
-          {/*  Выйти*/}
-          {/*</a>*/}
+
+          {isLoggedIn && (
+            <a className="mdl-navigation__link link" href="/">
+              Выйти
+            </a>
+          )}
+
           {isAdmin && (
             <a
               to="/"

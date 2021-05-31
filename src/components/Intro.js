@@ -1,4 +1,9 @@
-function Intro({ date, isAdmin, handleOpenDateChangePopup }) {
+function Intro({
+  date,
+  isAdmin,
+  handleOpenDateChangePopup,
+  isRegistrationOpen,
+}) {
   return (
     <section className="mdl-cell intro mdl-cell--12-col">
       <h2
@@ -9,7 +14,7 @@ function Intro({ date, isAdmin, handleOpenDateChangePopup }) {
       >
         {" "}
         Регистрация на ближайшую практику школе Adornos Center {date}{" "}
-        {date && "открыта!"}
+        {isRegistrationOpen && "открыта!"}
       </h2>
       <p className="mdl-typography--body-1-color-contrast mdl-typography--font-light">
         Для выбора ассистента и записи на практике необходимо
