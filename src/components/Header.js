@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 function Header({
   isAdmin,
   handleLoginPopupOpen,
@@ -15,6 +14,7 @@ function Header({
           <nav className="mdl-navigation mdl-layout--large-screen-only">
             {!isLoggedIn && (
               <a
+                href="#"
                 onClick={handleLoginPopupOpen}
                 className="mdl-navigation__link link"
               >
@@ -32,6 +32,7 @@ function Header({
               <a
                 className="mdl-navigation__link link"
                 onClick={handleTeacherPopupOpen}
+                href="#"
               >
                 Добавить преподавателя
               </a>
@@ -41,6 +42,7 @@ function Header({
               <a
                 className="mdl-navigation__link link"
                 onClick={handleAddUserPopupOpen}
+                href="#"
               >
                 Добавить пользователя
               </a>
@@ -68,7 +70,7 @@ function Header({
 
           {isAdmin && (
             <a
-              to="/"
+              href="#"
               className="mdl-navigation__link link"
               onClick={handleTeacherPopupOpen}
             >
@@ -78,6 +80,7 @@ function Header({
 
           {isAdmin && (
             <a
+              href="#"
               className="mdl-navigation__link link"
               onClick={handleAddUserPopupOpen}
             >
