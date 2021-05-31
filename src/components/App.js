@@ -11,7 +11,8 @@ import { dateFormat } from "../utils/utils";
 import api from "../utils/api";
 
 function App() {
-  const [lessonDate, setLessonDate] = React.useState("31 мая 2020");
+  const [lessonDate, setLessonDate] = React.useState(undefined);
+  const [currentUser, setCurrentUser] = React.useState({ isAmin: false });
   const [addUserButtonText, setAddUserButtonText] = React.useState("Добавить");
   const [isTeacherAddPopupOpen, setIsTeacherAddPopupOpen] =
     React.useState(false);
@@ -44,12 +45,22 @@ function App() {
     setIsAddUserPopupOpen(false);
   };
 
+  const setDate = (date) => {
+    setPracticDate(date);
+    setLessonDate(dateFormat(date));
+  };
+
   const handleChangeDate = (date) => {
     const practicDate = new Date(date);
     practicDate.setHours(11, 0);
-    setPracticDate(practicDate);
-    setLessonDate(dateFormat(practicDate));
-    closeAllPopups();
+    api
+      .setDate(date)
+      .then((res) => {
+        console.log(res);
+        setDate(practicDate);
+      })
+      .catch((e) => console.log(e))
+      .finally(closeAllPopups);
   };
 
   const handleTeacherDel = (teacher) => {
@@ -84,6 +95,44 @@ function App() {
       });
   };
 
+  const handleLogin = (user) => {
+    api
+      .userLogin(user)
+      .then((currentUser) => {
+        setIsLoggedIn(true);
+        setCurrentUser(currentUser);
+        console.log(currentUser);
+      })
+      .then(closeAllPopups)
+      .catch((e) => console.log(e));
+  };
+
+  const handleTeacherBook = (teacher) => {
+    api
+      .addClient(teacher._id, currentUser.userId, currentUser.fullName)
+      .then((updatedTeacherCard) => {
+        setTeachersList((state) =>
+          state.map((t) => (t._id === teacher._id ? updatedTeacherCard : t))
+        );
+      })
+      .catch((e) => console.log(e));
+  };
+
+  const handleTeacherUnbook = (teacher) => {
+    api
+      .removeClient(teacher._id, currentUser.userId)
+      .then((updatedTeacherCard) => {
+        setTeachersList((state) =>
+          state.map((t) => (t._id === teacher._id ? updatedTeacherCard : t))
+        );
+      })
+      .catch((e) => console.log(e));
+  };
+
+  React.useEffect(() => {
+    setAddUserButtonText("Добавить");
+  }, [isAddUserPopupOpen]);
+
   React.useEffect(() => {
     const registrationStartDate = new Date(practicDate);
     registrationStartDate.setDate(registrationStartDate.getDate() - 7);
@@ -102,22 +151,16 @@ function App() {
       .getTeachersList()
       .then((answer) => {
         setTeachersList(answer);
-        console.log(answer);
       })
       .catch((err) => console.log(err));
+    api
+      .getDate()
+      .then((date) => {
+        setDate(new Date(date));
+      })
+      .catch((e) => console.log(e));
   }, []);
 
-  const card = {
-    name: "Кирилл Паршаков",
-    dances: 2,
-    photoURL:
-      "https://center.adornos.ru/wp-content/uploads/2020/02/parshakov.jpg",
-    clients: [
-      { id: 1, name: "Константин Бровцев" },
-      { id: 2, name: "Елена Бровцева" },
-    ],
-    _id: "id",
-  };
   const user = {
     name: "Анна Ли",
     isAdmin: true,
@@ -126,7 +169,7 @@ function App() {
   return (
     <div className="mdl-layout mdl-js-layout mdl-layout--fixed-header">
       <Header
-        isAdmin={user.isAdmin}
+        isAdmin={currentUser.isAdmin}
         handleLoginOpen={handleOpenLoginPopup}
         handleTeacherPopupOpen={handleOpenAddTeacherPopup}
         isLoggedIn={isLoggedIn}
@@ -138,19 +181,22 @@ function App() {
           <div className="mdl-grid">
             <Intro
               date={lessonDate}
-              isAdmin={user.isAdmin}
+              isAdmin={currentUser.isAdmin}
               handleOpenDateChangePopup={handleOpenDateChangePopup}
             />
             <div className="mdl-cell--12-col">
               <section className="cards">
-                {teachersList.map((teacher, i) => {
+                {teachersList.map((teacher) => {
                   return (
                     <Card
                       teacher={teacher}
                       key={teacher._id}
-                      user={user}
+                      user={currentUser}
                       isRegistrationOpen={isRegistrationOpen}
                       onCardDelete={handleTeacherDel}
+                      isLoggedIn={isLoggedIn}
+                      onTeacherBook={handleTeacherBook}
+                      onTeacherUnbook={handleTeacherUnbook}
                     />
                   );
                 })}
@@ -171,7 +217,11 @@ function App() {
         onUserAdd={handleUserAdd}
         addUserButtonText={addUserButtonText}
       />
-      <LoginPopup isOpen={isLoginPopupOpen} onClose={closeAllPopups} />
+      <LoginPopup
+        isOpen={isLoginPopupOpen}
+        onClose={closeAllPopups}
+        onLogin={handleLogin}
+      />
       <ChangeDatePopup
         isOpen={isDateChangePopupOpen}
         onClose={closeAllPopups}

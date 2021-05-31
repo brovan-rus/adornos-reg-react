@@ -1,8 +1,40 @@
-function Card({ teacher, user, handleBook, onCardDelete, isRegistrationOpen }) {
+function Card({
+  teacher,
+  user,
+  onTeacherBook,
+  onTeacherUnbook,
+  onCardDelete,
+  isRegistrationOpen,
+  isLoggedIn,
+}) {
   function handleCardDelete() {
     onCardDelete(teacher);
   }
   const clients = teacher.clients ? teacher.clients.length : 0;
+  // const isButtonDisabled =
+  //   clients > 1 && !teacher.isBookedByMe && !isRegistrationOpen && !isLoggedIn;
+  const isButtonActive = isLoggedIn && !(clients > 1) && isRegistrationOpen;
+
+  const isBookedByMe =
+    clients > 0 &&
+    teacher.clients.some((client) => client.clientId === user.userId);
+
+  // console.log(teacher.clients.some((client) => client._id === user.userId));
+
+  // console.log(isBookedByMe);
+
+  // card.likes.some(
+  //   (like) => like._id === currentUser.userId
+  // );
+
+  const handleBook = () => {
+    onTeacherBook(teacher, isBookedByMe);
+  };
+
+  const handleUnbook = () => {
+    onTeacherUnbook(teacher, isBookedByMe);
+  };
+
   return (
     <div className="mdl-card assistent-card mdl-shadow--2dp">
       <button
@@ -35,23 +67,31 @@ function Card({ teacher, user, handleBook, onCardDelete, isRegistrationOpen }) {
           ? "Приглашённый ассистент. Стоимость прохода - 1000 рублей."
           : "Ассистент Adornos Center. Стоимость прохода - 2000 рублей."}
       </div>
-      <div className="mdl-card__actions mdl-card--border">
-        <button
-          className="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
-          disabled={clients > 1 && !teacher.isBookedByMe && !isRegistrationOpen}
-          onClick={handleBook}
-        >
-          {teacher.isBookedByMe && "Отказаться"}
-          {clients > 1 && !teacher.isBookedByMe
-            ? "Запись закрыта"
-            : "Записаться"}
-        </button>
+      <div className="two-columns">
+        <div className="mdl-card__actions mdl-card--border mdl-card__actions_two-columns">
+          <button
+            className="mdl-button mdl-js-button mdl-button_bottom-margin mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
+            disabled={!isButtonActive}
+            onClick={handleBook}
+          >
+            {clients > 1 ? "Запись закрыта" : "Записаться"}
+          </button>
+
+          {isBookedByMe && isLoggedIn && (
+            <button
+              className="mdl-button mdl-js-button mdl-button_bottom-margin mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
+              onClick={handleUnbook}
+            >
+              Отказаться
+            </button>
+          )}
+        </div>
 
         <div>
           {clients > 0 &&
-            teacher.clients.map((client) => {
+            teacher.clients.map((client, i) => {
               return (
-                <p key={client.clientId} className="assistent-card--person">
+                <p key={i} className="assistent-card--person">
                   {client.clientName}
                 </p>
               );

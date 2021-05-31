@@ -19,3 +19,6 @@
 @import url("./blocks/form/__submit-button/_disabled/form__submit-button_disabled.css");
 @import url("./blocks/link/link.css");
 @import url("./blocks/change-title/change-title.css");
+@import url("blocks/two-columns/two-columns.css");
+@import url("blocks/mdl-card/__actions/_two-columns/mdl-card__actions_two-columns.css");
+@import url("blocks/mdl-button/mdl-button_bottom-margin.css");

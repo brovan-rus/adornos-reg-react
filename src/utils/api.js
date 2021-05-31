@@ -47,6 +47,69 @@ class Api {
       }),
     }).then(handleResponse);
   }
+
+  userLogin(user) {
+    return fetch(`${this._url}/sign-in`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        userName: user.userName,
+        password: user.password,
+      }),
+    }).then(handleResponse);
+  }
+
+  setDate(date) {
+    return fetch(`${this._url}/date`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        date: date,
+      }),
+    }).then(handleResponse);
+  }
+
+  getDate() {
+    return fetch(`${this._url}/date`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).then(handleResponse);
+  }
+
+  removeClient(teacherId, clientId) {
+    return fetch(`${this._url}/clients/${teacherId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        clientId: clientId,
+      }),
+    }).then(handleResponse);
+  }
+
+  addClient(teacherId, clientId, clientName) {
+    return fetch(`${this._url}/clients/${teacherId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        clientId: clientId,
+        clientName: clientName,
+      }),
+    }).then(handleResponse);
+  }
+
+  changeBookTeacherStatus(teacherId, clientId, clientName, isBookedByMe) {
+    if (!isBookedByMe) return this.addClient(teacherId, clientId, clientName);
+    else return this.removeClient(teacherId, clientId);
+  }
 }
 
 const api = new Api(baseURL);

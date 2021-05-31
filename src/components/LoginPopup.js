@@ -13,7 +13,11 @@ function LoginPopup({ isOpen, onClose, onLogin }) {
   };
   const handleSubmit = (e) => {
     e.preventDefault();
-    onLogin(userName, password);
+    const user = {
+      userName: userName,
+      password: password,
+    };
+    onLogin(user);
   };
 
   React.useEffect(() => {
