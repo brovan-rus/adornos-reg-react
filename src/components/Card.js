@@ -1,3 +1,4 @@
+import React from "react";
 function Card({
   teacher,
   user,
@@ -6,13 +7,15 @@ function Card({
   onCardDelete,
   isRegistrationOpen,
   isLoggedIn,
+  onSelect,
+  onDeselect,
 }) {
   function handleCardDelete() {
     onCardDelete(teacher);
   }
   const clients = teacher.clients ? teacher.clients.length : 0;
   const haveBookPossibility = user.tickets > 0;
-  console.log(user.tickets);
+  // console.log(user.tickets);
 
   const isButtonActive =
     isLoggedIn && !(clients > 1) && isRegistrationOpen && haveBookPossibility;
@@ -29,15 +32,32 @@ function Card({
     onTeacherUnbook(teacher, isBookedByMe);
   };
 
+  const [isSelected, setIsSelected] = React.useState(false);
+
+  const handleSelect = () => {
+    if (isSelected === false) {
+      onSelect(teacher);
+    } else onDeselect(teacher);
+    setIsSelected(!isSelected);
+  };
+
   return (
     <div className="mdl-card assistent-card mdl-shadow--2dp">
-      <button
-        type="button"
-        className={
-          user.isAdmin ? "card__trash-button" : "card__trash-button_inactive"
-        }
-        onClick={handleCardDelete}
-      />
+      <div className="card__controls">
+        <button
+          type="button"
+          className="card__trash-button"
+          onClick={handleCardDelete}
+        />
+
+        <input
+          type="checkbox"
+          className="card__select"
+          checked={isSelected}
+          onChange={handleSelect}
+        />
+      </div>
+
       <div className="mdl-card__media mdl-card--expand">
         <img
           className="assistent-card__image"

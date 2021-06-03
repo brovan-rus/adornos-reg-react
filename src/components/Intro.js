@@ -18,7 +18,7 @@ function Intro({
       </h2>
       <p className="mdl-typography--body-1-color-contrast mdl-typography--font-light">
         Для выбора ассистента и записи на практике необходимо
-        зарегистрироваться. Запись открывается ровно за неделю до начали
+        зарегистрироваться. Запись открывается ровно за неделю до начала
         практики.
       </p>
       <p className="mdl-typography--body-1-color-contrast mdl-typography--font-light">

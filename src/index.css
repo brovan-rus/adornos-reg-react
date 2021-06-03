@@ -1,9 +1,11 @@
 @import url("https://fonts.googleapis.com/icon?family=Material+Icons");
 @import url("https://code.getmdl.io/1.3.0/material.indigo-pink.min.css");
 @import url("./blocks/assistent-card.css");
-@import url("./blocks/cards.css");
-@import url("./blocks/trash-button/card__trash-button.css");
-@import url("./blocks/trash-button/_inactive/card__trash-button_inactive.css");
+@import url("blocks/cards/cards.css");
+@import url("./blocks/card/__trash-button/card__trash-button.css");
+@import url("./blocks/card/__trash-button/_inactive/card__trash-button_inactive.css");
+@import url("./blocks/card/__select/card__select.css");
+@import url("./blocks/card/__controls/card__controls.css");
 @import url("./blocks/popup/popup.css");
 @import url("./blocks/popup/_opened/popup_opened.css");
 @import url("./blocks/popup/__close-button/popup__close-button.css");

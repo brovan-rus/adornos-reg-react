@@ -9,6 +9,7 @@ import LoginPopup from "./LoginPopup";
 import ChangeDatePopup from "./ChangeDatePopup";
 import { dateFormat } from "../utils/utils";
 import api from "../utils/api";
+import TeacherSelectSnackbar from "./TeacherSelectSnackbar";
 
 function App() {
   const [lessonDate, setLessonDate] = React.useState(undefined);
@@ -27,6 +28,9 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = React.useState(false);
   const [practicDate, setPracticDate] = React.useState();
   const [teachersList, setTeachersList] = React.useState([]);
+  const [selectedTeachersList, setSelectedTeachersList] = React.useState([]);
+  const [teacherSelectSnackbarMessage, setTeacherSelectSnackbarMessage] =
+    React.useState("");
 
   const handleOpenAddUserPopup = () => {
     setIsAddUserPopupOpen(true);
@@ -180,6 +184,28 @@ function App() {
       .catch((e) => console.log(e));
   };
 
+  const handleTeacherSelect = (selectedTeacher) => {
+    setSelectedTeachersList([...selectedTeachersList, selectedTeacher]);
+    setTeacherSelectSnackbarMessage(
+      `Выбрано: ${
+        selectedTeachersList.length + 1
+      } преподаватель. Обновить список?`
+    );
+  };
+
+  const handleTeacherDeselect = (selectedTeacher) => {
+    const selectedTeachersListCropped = selectedTeachersList;
+    selectedTeachersListCropped.forEach((t, i, arr) => {
+      if (t._id === selectedTeacher._id) {
+        return arr.splice(i, 1);
+      }
+    });
+    setSelectedTeachersList(selectedTeachersListCropped);
+    setTeacherSelectSnackbarMessage(
+      `Выбрано: ${selectedTeachersList.length} преподаватель. Обновить список?`
+    );
+  };
+
   React.useEffect(() => {
     setAddUserButtonText("Добавить");
   }, [isAddUserPopupOpen]);
@@ -214,6 +240,10 @@ function App() {
 
   return (
     <div className="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+      <TeacherSelectSnackbar
+        isOpen={selectedTeachersList.length > 0}
+        message={teacherSelectSnackbarMessage}
+      />
       <Header
         isAdmin={currentUser.isAdmin}
         handleLoginOpen={handleOpenLoginPopup}
@@ -244,6 +274,8 @@ function App() {
                       isLoggedIn={isLoggedIn}
                       onTeacherBook={handleTeacherBook}
                       onTeacherUnbook={handleTeacherUnbook}
+                      onSelect={handleTeacherSelect}
+                      onDeselect={handleTeacherDeselect}
                     />
                   );
                 })}

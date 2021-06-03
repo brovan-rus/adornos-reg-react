@@ -2,6 +2,11 @@
     height: 100%;
 }
 
+
+.assistent-card > .mdl-card__menu {
+  width: 50%;
+}
+
 .assistent-card--person {
     margin: 0;
     padding: 0;

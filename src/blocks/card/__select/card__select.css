@@ -1,0 +1,21 @@
+.card__select{
+/*// position: absolute;*/
+  width: 20px;
+  height: 20px;
+/*  right: -25px;*/
+/*  top: -22px;*/
+  transition: all 0.3s linear;
+  /*background-color: rgba(0, 0, 0, 0);*/
+  border: 1px solid red;
+  outline: none;
+
+}
+
+.card__trash-button:hover{
+  opacity: 0.6;
+  cursor: pointer;
+}
+
+.card__trash-button:active{
+  border: 1px solid rgba(255, 255, 255, 0.6);
+}
