@@ -3,23 +3,29 @@ import PopupWithForm from "./PopupWithForm";
 
 function AddTeacherPopup({ isOpen, onClose, onTeacherAdd, buttonText }) {
   const [name, setName] = React.useState();
-  const [isGuest, setIsGuest] = React.useState();
+  const [description, setDescription] = React.useState();
+  const [price, setPrice] = React.useState();
   const [url, setUrl] = React.useState();
-  const handleSetIsGuest = (e) => {
-    setIsGuest(e.target.checked);
-  };
+
   const handleSetName = (e) => {
     setName(e.target.value);
   };
   const handleSetUrl = (e) => {
     setUrl(e.target.value);
   };
+  const handleSetDescription = (e) => {
+    setDescription(e.target.value);
+  };
+  const handleSetPrice = (e) => {
+    setPrice(e.target.value);
+  };
   const handleSubmit = (e) => {
     e.preventDefault();
     const teacher = {
       name: name,
       photoUrl: url,
-      isGuest: isGuest,
+      description: description,
+      price: price,
     };
     onTeacherAdd(teacher);
   };
@@ -27,7 +33,8 @@ function AddTeacherPopup({ isOpen, onClose, onTeacherAdd, buttonText }) {
   React.useEffect(() => {
     setName("");
     setUrl("");
-    setIsGuest(false);
+    setPrice(0);
+    setDescription("");
   }, [isOpen]);
 
   return (
@@ -41,7 +48,6 @@ function AddTeacherPopup({ isOpen, onClose, onTeacherAdd, buttonText }) {
     >
       <input
         className="form__input form__input_info_name"
-        id="teacher-name-input"
         required
         autoComplete="off"
         minLength="2"
@@ -55,7 +61,6 @@ function AddTeacherPopup({ isOpen, onClose, onTeacherAdd, buttonText }) {
 
       <input
         className="form__input form__input_info_name"
-        id="teacher-name-input"
         required
         autoComplete="off"
         minLength="2"
@@ -65,17 +70,31 @@ function AddTeacherPopup({ isOpen, onClose, onTeacherAdd, buttonText }) {
         value={url}
         onChange={handleSetUrl}
       />
-      <div className="form__container">
-        <span className="form__text">Приглашённый преподаватель?</span>
-        <input
-          className="form__input form__input_type_checkbox"
-          id="card-link-input"
-          type="checkbox"
-          name="guest"
-          checked={isGuest}
-          onChange={handleSetIsGuest}
-        />
-      </div>
+
+      <textarea
+        className="form__input form__input_info_name"
+        required
+        autoComplete="off"
+        minLength="2"
+        name="url"
+        placeholder="Краткое описание преподавателя"
+        value={description}
+        onChange={handleSetDescription}
+      />
+
+      <span>Стоимость захода</span>
+
+      <input
+        className="form__input form__input_info_name"
+        required
+        autoComplete="off"
+        minLength="2"
+        type="number"
+        name="url"
+        placeholder=""
+        value={price}
+        onChange={handleSetPrice}
+      />
     </PopupWithForm>
   );
 }
