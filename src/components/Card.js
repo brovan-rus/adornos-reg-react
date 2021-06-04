@@ -17,7 +17,7 @@ function Card({
     setIsSelected(
       selectedTeachersList &&
         selectedTeachersList.some((selectedTeacher) => {
-          return selectedTeacher.teacherId === teacher._id;
+          return selectedTeacher._id === teacher._id;
         })
     );
   }, []);
@@ -56,7 +56,9 @@ function Card({
 
   return (
     <div className="mdl-card assistent-card mdl-shadow--2dp card">
-      <div className="card__controls">
+      <div
+        className={`card__controls ${!user.isAdmin && "card__controls_hidden"}`}
+      >
         <button
           type="button"
           className="card__trash-button"

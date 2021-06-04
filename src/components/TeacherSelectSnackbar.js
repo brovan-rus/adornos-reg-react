@@ -4,8 +4,6 @@ import IconButton from "@material-ui/core/IconButton";
 import DoneOutlineIcon from "@material-ui/icons/DoneOutline";
 
 function TeacherSelectSnackbar({ isOpen, onApprove, message }) {
-  // const handleApprove = () => {};
-
   return (
     <div>
       <Snackbar
@@ -18,6 +16,9 @@ function TeacherSelectSnackbar({ isOpen, onApprove, message }) {
         action={
           <React.Fragment>
             <IconButton
+              className={`${
+                message.split("Обновить").length < 2 && "snackbar__icon_hidden"
+              }`}
               size="small"
               aria-label="close"
               color="inherit"

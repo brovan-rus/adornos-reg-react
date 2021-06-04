@@ -156,7 +156,7 @@ function App() {
         api
           .addClient(teacher._id, currentUser._id, currentUser.fullName)
           .then((updatedTeacherCard) => {
-            setTeachersList((state) =>
+            setSelectedTeachersList((state) =>
               state.map((t) => (t._id === teacher._id ? updatedTeacherCard : t))
             );
           })
@@ -175,7 +175,7 @@ function App() {
         api
           .removeClient(teacher._id, currentUser._id)
           .then((updatedTeacherCard) => {
-            setTeachersList((state) =>
+            setSelectedTeachersList((state) =>
               state.map((t) => (t._id === teacher._id ? updatedTeacherCard : t))
             );
           })
@@ -246,6 +246,9 @@ function App() {
       .getCurrentTeacherList()
       .then((answer) => {
         setSelectedTeachersList(answer);
+        setTeacherSelectSnackbarMessage(
+          `Выбрано: ${answer.length} преподаватель.`
+        );
       })
       .catch((e) => console.log(e));
 
@@ -259,11 +262,13 @@ function App() {
 
   return (
     <div className="mdl-layout mdl-js-layout mdl-layout--fixed-header">
-      <TeacherSelectSnackbar
-        isOpen={selectedTeachersList.length > 0}
-        message={teacherSelectSnackbarMessage}
-        onApprove={handleCurrentTeacherListRenew}
-      />
+      {currentUser.isAdmin && (
+        <TeacherSelectSnackbar
+          isOpen={selectedTeachersList.length > 0}
+          message={teacherSelectSnackbarMessage}
+          onApprove={handleCurrentTeacherListRenew}
+        />
+      )}
       <Header
         isAdmin={currentUser.isAdmin}
         handleLoginOpen={handleOpenLoginPopup}
