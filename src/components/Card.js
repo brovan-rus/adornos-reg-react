@@ -76,10 +76,9 @@ function Card({
           Свободно проходов
         </span>
       </div>
+      <div className="mdl-card__supporting-text">{teacher.description}</div>
       <div className="mdl-card__supporting-text">
-        {teacher.isGuest
-          ? "Приглашённый ассистент. Стоимость прохода - 1000 рублей."
-          : "Ассистент Adornos Center. Стоимость прохода - 2000 рублей."}
+        Стоимость захода составляет {teacher.price} руб.
       </div>
       <div className="two-columns">
         <div className="mdl-card__actions mdl-card--border mdl-card__actions_two-columns">

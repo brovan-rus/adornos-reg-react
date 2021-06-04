@@ -29,7 +29,8 @@ class Api {
       },
       body: JSON.stringify({
         name: teacher.name,
-        isGuest: teacher.isGuest,
+        description: teacher.description,
+        price: teacher.price,
         photoUrl: teacher.photoUrl,
       }),
     }).then(handleResponse);

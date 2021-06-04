@@ -47,7 +47,7 @@ function AddTeacherPopup({ isOpen, onClose, onTeacherAdd, buttonText }) {
       onSubmit={handleSubmit}
     >
       <input
-        className="form__input form__input_info_name"
+        className="form__input"
         required
         autoComplete="off"
         minLength="2"
@@ -60,7 +60,7 @@ function AddTeacherPopup({ isOpen, onClose, onTeacherAdd, buttonText }) {
       />
 
       <input
-        className="form__input form__input_info_name"
+        className="form__input"
         required
         autoComplete="off"
         minLength="2"
@@ -72,7 +72,7 @@ function AddTeacherPopup({ isOpen, onClose, onTeacherAdd, buttonText }) {
       />
 
       <textarea
-        className="form__input form__input_info_name"
+        className="form__input form__input_type_description"
         required
         autoComplete="off"
         minLength="2"
@@ -85,7 +85,7 @@ function AddTeacherPopup({ isOpen, onClose, onTeacherAdd, buttonText }) {
       <span>Стоимость захода</span>
 
       <input
-        className="form__input form__input_info_name"
+        className="form__input form__input_type_price"
         required
         autoComplete="off"
         minLength="2"
