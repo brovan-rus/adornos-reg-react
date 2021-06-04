@@ -76,7 +76,9 @@ function Card({
           Свободно проходов
         </span>
       </div>
-      <div className="mdl-card__supporting-text">{teacher.description}</div>
+      <div className="mdl-card__supporting-text card__description">
+        {teacher.description}
+      </div>
       <div className="mdl-card__supporting-text">
         Стоимость захода составляет {teacher.price} руб.
       </div>

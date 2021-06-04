@@ -1,0 +1,20 @@
+.card__description {
+  overflow: scroll;
+}
+
+.card__description::-webkit-scrollbar {
+  width: 5px;
+  height: 80%;
+}
+
+.card__description::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 5px;
+  margin: 10px 0;
+  height: min-content;
+}
+
+.card__description::-webkit-scrollbar-thumb {
+  background-color: rgba(0,0,0, .75);
+  border-radius: 6px;
+}
