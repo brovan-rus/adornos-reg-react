@@ -4,7 +4,7 @@ import IconButton from "@material-ui/core/IconButton";
 import DoneOutlineIcon from "@material-ui/icons/DoneOutline";
 
 function TeacherSelectSnackbar({ isOpen, onApprove, message }) {
-  const handleApprove = () => {};
+  // const handleApprove = () => {};
 
   return (
     <div>
@@ -21,7 +21,7 @@ function TeacherSelectSnackbar({ isOpen, onApprove, message }) {
               size="small"
               aria-label="close"
               color="inherit"
-              onClick={handleApprove}
+              onClick={onApprove}
             >
               <DoneOutlineIcon fontSize="small" />
             </IconButton>

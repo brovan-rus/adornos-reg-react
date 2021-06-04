@@ -206,6 +206,17 @@ function App() {
     );
   };
 
+  const handleCurrentTeacherListRenew = () => {
+    api
+      .clearCurrentTeacherList()
+      .then((res) => console.log(res))
+      .then(() => {
+        selectedTeachersList.forEach((teacher) => {
+          api.addToCurrentTeacherList(teacher).then((res) => console.log(res));
+        });
+      });
+  };
+
   React.useEffect(() => {
     setAddUserButtonText("Добавить");
   }, [isAddUserPopupOpen]);
@@ -230,6 +241,14 @@ function App() {
         setTeachersList(answer);
       })
       .catch((err) => console.log(err));
+
+    api
+      .getCurrentTeacherList()
+      .then((answer) => {
+        setSelectedTeachersList(answer);
+      })
+      .catch((e) => console.log(e));
+
     api
       .getDate()
       .then((date) => {
@@ -243,6 +262,7 @@ function App() {
       <TeacherSelectSnackbar
         isOpen={selectedTeachersList.length > 0}
         message={teacherSelectSnackbarMessage}
+        onApprove={handleCurrentTeacherListRenew}
       />
       <Header
         isAdmin={currentUser.isAdmin}
@@ -263,22 +283,41 @@ function App() {
             />
             <div className="mdl-cell--12-col">
               <section className="cards">
-                {teachersList.map((teacher) => {
-                  return (
-                    <Card
-                      teacher={teacher}
-                      key={teacher._id}
-                      user={currentUser}
-                      isRegistrationOpen={isRegistrationOpen}
-                      onCardDelete={handleTeacherDel}
-                      isLoggedIn={isLoggedIn}
-                      onTeacherBook={handleTeacherBook}
-                      onTeacherUnbook={handleTeacherUnbook}
-                      onSelect={handleTeacherSelect}
-                      onDeselect={handleTeacherDeselect}
-                    />
-                  );
-                })}
+                {currentUser.isAdmin
+                  ? teachersList.map((teacher) => {
+                      return (
+                        <Card
+                          teacher={teacher}
+                          key={teacher._id}
+                          user={currentUser}
+                          isRegistrationOpen={isRegistrationOpen}
+                          onCardDelete={handleTeacherDel}
+                          isLoggedIn={isLoggedIn}
+                          onTeacherBook={handleTeacherBook}
+                          onTeacherUnbook={handleTeacherUnbook}
+                          onSelect={handleTeacherSelect}
+                          onDeselect={handleTeacherDeselect}
+                          selectedTeachersList={selectedTeachersList}
+                        />
+                      );
+                    })
+                  : selectedTeachersList.map((teacher) => {
+                      return (
+                        <Card
+                          teacher={teacher}
+                          key={teacher._id}
+                          user={currentUser}
+                          isRegistrationOpen={isRegistrationOpen}
+                          onCardDelete={handleTeacherDel}
+                          isLoggedIn={isLoggedIn}
+                          onTeacherBook={handleTeacherBook}
+                          onTeacherUnbook={handleTeacherUnbook}
+                          onSelect={handleTeacherSelect}
+                          onDeselect={handleTeacherDeselect}
+                          selectedTeachersList={selectedTeachersList}
+                        />
+                      );
+                    })}
               </section>
             </div>
           </div>

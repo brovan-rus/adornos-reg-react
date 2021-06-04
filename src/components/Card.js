@@ -9,13 +9,24 @@ function Card({
   isLoggedIn,
   onSelect,
   onDeselect,
+  selectedTeachersList,
 }) {
+  const [isSelected, setIsSelected] = React.useState();
+
+  React.useEffect(() => {
+    setIsSelected(
+      selectedTeachersList &&
+        selectedTeachersList.some((selectedTeacher) => {
+          return selectedTeacher.teacherId === teacher._id;
+        })
+    );
+  }, []);
+
   function handleCardDelete() {
     onCardDelete(teacher);
   }
   const clients = teacher.clients ? teacher.clients.length : 0;
   const haveBookPossibility = user.tickets > 0;
-  // console.log(user.tickets);
 
   const isButtonActive =
     isLoggedIn && !(clients > 1) && isRegistrationOpen && haveBookPossibility;
@@ -32,17 +43,19 @@ function Card({
     onTeacherUnbook(teacher, isBookedByMe);
   };
 
-  const [isSelected, setIsSelected] = React.useState(false);
-
   const handleSelect = () => {
+    console.log(isSelected);
     if (isSelected === false) {
       onSelect(teacher);
-    } else onDeselect(teacher);
+    } else {
+      console.log("Снять", teacher);
+      onDeselect(teacher);
+    }
     setIsSelected(!isSelected);
   };
 
   return (
-    <div className="mdl-card assistent-card mdl-shadow--2dp">
+    <div className="mdl-card assistent-card mdl-shadow--2dp card">
       <div className="card__controls">
         <button
           type="button"

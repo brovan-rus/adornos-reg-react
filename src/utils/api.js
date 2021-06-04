@@ -135,17 +135,14 @@ class Api {
     }).then(handleResponse);
   }
 
-  addCurrentTeacher(teacher) {
+  addToCurrentTeacherList(teacher) {
     return fetch(`${this._url}/currentTeacher/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        name: teacher.name,
-        description: teacher.description,
-        price: teacher.price,
-        photoUrl: teacher.photoUrl,
+        teacherId: teacher._id,
       }),
     }).then(handleResponse);
   }
