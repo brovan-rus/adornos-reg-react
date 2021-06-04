@@ -67,10 +67,19 @@ function App() {
       .then((res) => {
         console.log(res);
         setDate(practicDate);
-        teachersList.forEach((teacher) => {
-          console.log(teacher);
-          handleTeacherDel(teacher);
-        });
+        // teachersList.forEach((teacher) => {
+        //   console.log(teacher);
+        //   handleTeacherDel(teacher);
+        // });
+        api
+          .resetUsersBookPossibilities()
+          .then(() => {
+            api
+              .clearCurrentTeacherList()
+              .then((res) => console.log(res))
+              .catch((e) => console.log(e));
+          })
+          .catch((e) => console.log(e));
       })
       .catch((e) => console.log(e))
       .finally(closeAllPopups);
