@@ -209,12 +209,20 @@ function App() {
   const handleCurrentTeacherListRenew = () => {
     api
       .clearCurrentTeacherList()
-      .then((res) => console.log(res))
+      .then(() => setTeacherSelectSnackbarMessage("Обновление..."))
       .then(() => {
         selectedTeachersList.forEach((teacher) => {
           api.addToCurrentTeacherList(teacher).then((res) => console.log(res));
         });
-      });
+      })
+      .then(() =>
+        setTimeout(() => {
+          setTeacherSelectSnackbarMessage(
+            `Выбрано: ${selectedTeachersList.length} преподаватель.`
+          );
+        }, 820)
+      )
+      .catch((e) => console.log(e));
   };
 
   React.useEffect(() => {
@@ -351,7 +359,7 @@ function App() {
         isOpen={isDateChangePopupOpen}
         onClose={closeAllPopups}
         onDateChange={handleChangeDate}
-        curretDate={practicDate}
+        currentDate={practicDate}
       />
     </div>
   );

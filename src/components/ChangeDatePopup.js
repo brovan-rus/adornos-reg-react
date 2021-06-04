@@ -3,6 +3,7 @@ import PopupWithForm from "./PopupWithForm";
 
 function ChangeDatePopup({ isOpen, onClose, onDateChange, currentDate }) {
   const [date, setDate] = React.useState();
+  const [formattedDate, setFormattedDate] = React.useState();
   const handleSetDate = (e) => {
     setDate(e.target.value);
   };
@@ -13,10 +14,10 @@ function ChangeDatePopup({ isOpen, onClose, onDateChange, currentDate }) {
   };
 
   React.useEffect(() => {
-    const formattedDate =
-      currentDate && currentDate.toISOString().substr(0, 10);
-    setDate(formattedDate);
-  }, [isOpen, currentDate, date]);
+    if (currentDate) {
+      setFormattedDate(currentDate.toISOString().substr(0, 10));
+    }
+  }, [isOpen, currentDate]);
 
   return (
     <PopupWithForm
@@ -36,7 +37,7 @@ function ChangeDatePopup({ isOpen, onClose, onDateChange, currentDate }) {
         maxLength="30"
         type="date"
         name="date"
-        value={date}
+        value={formattedDate}
         onChange={handleSetDate}
       />
     </PopupWithForm>
