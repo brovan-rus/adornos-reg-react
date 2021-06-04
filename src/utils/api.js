@@ -134,6 +134,34 @@ class Api {
       },
     }).then(handleResponse);
   }
+
+  addCurrentTeacher(teacher) {
+    return fetch(`${this._url}/currentTeacher/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: teacher.name,
+        description: teacher.description,
+        price: teacher.price,
+        photoUrl: teacher.photoUrl,
+      }),
+    }).then(handleResponse);
+  }
+
+  clearCurrentTeacherList() {
+    return fetch(`${this._url}/currentTeacher/`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).then(handleResponse);
+  }
+
+  getCurrentTeacherList() {
+    return fetch(`${this._url}/currentTeacher/`, {}).then(handleResponse);
+  }
 }
 
 const api = new Api(baseURL);

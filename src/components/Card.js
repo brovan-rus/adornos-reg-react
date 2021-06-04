@@ -73,7 +73,7 @@ function Card({
           className="mdl-badge mdl-badge--dark-background"
           data-badge={2 - clients}
         >
-          Свободно проходов
+          Свободно заходов
         </span>
       </div>
       <div className="mdl-card__supporting-text card__description">
