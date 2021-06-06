@@ -43,9 +43,9 @@ class Api {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        userName: user.userName,
         fullName: user.fullName,
-        password: user.password,
+        email: user.email,
+        phone: user.phone,
       }),
     }).then(handleResponse);
   }
@@ -96,6 +96,7 @@ class Api {
   }
 
   addClient(teacherId, clientId, clientName) {
+    console.log(teacherId, clientId, clientName);
     return fetch(`${this._url}/clients/${teacherId}`, {
       method: "PUT",
       headers: {

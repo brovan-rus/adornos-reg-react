@@ -1,7 +1,7 @@
 function Header({
   isAdmin,
   handleLoginPopupOpen,
-  handleAddUserPopupOpen,
+  // handleAddUserPopupOpen,
   handleTeacherPopupOpen,
   isLoggedIn,
 }) {
@@ -38,15 +38,15 @@ function Header({
               </a>
             )}
 
-            {isAdmin && (
-              <a
-                className="mdl-navigation__link link"
-                onClick={handleAddUserPopupOpen}
-                href="#"
-              >
-                Добавить пользователя
-              </a>
-            )}
+            {/*{isAdmin && (*/}
+            {/*  <a*/}
+            {/*    className="mdl-navigation__link link"*/}
+            {/*    onClick={handleAddUserPopupOpen}*/}
+            {/*    href="#"*/}
+            {/*  >*/}
+            {/*    Добавить пользователя*/}
+            {/*  </a>*/}
+            {/*)}*/}
           </nav>
         </div>
       </header>
@@ -78,15 +78,15 @@ function Header({
             </a>
           )}
 
-          {isAdmin && (
-            <a
-              href="#"
-              className="mdl-navigation__link link"
-              onClick={handleAddUserPopupOpen}
-            >
-              Добавить пользователя
-            </a>
-          )}
+          {/*{isAdmin && (*/}
+          {/*  <a*/}
+          {/*    href="#"*/}
+          {/*    className="mdl-navigation__link link"*/}
+          {/*    onClick={handleAddUserPopupOpen}*/}
+          {/*  >*/}
+          {/*    Добавить пользователя*/}
+          {/*  </a>*/}
+          {/*)}*/}
         </nav>
       </div>
     </>

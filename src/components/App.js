@@ -4,27 +4,32 @@ import Intro from "./Intro";
 import React from "react";
 import Card from "./Card";
 import AddTeacherPopup from "./AddTeacherPopup";
-import AddUserPopup from "./AddUserPopup";
 import LoginPopup from "./LoginPopup";
 import ChangeDatePopup from "./ChangeDatePopup";
 import { dateFormat } from "../utils/utils";
 import api from "../utils/api";
 import TeacherSelectSnackbar from "./TeacherSelectSnackbar";
+import BookTeacherPopup from "./BookTeacherPopup";
 
 function App() {
   const [lessonDate, setLessonDate] = React.useState(undefined);
   const [currentUser, setCurrentUser] = React.useState({ isAmin: false });
-  const [addUserButtonText, setAddUserButtonText] = React.useState("Добавить");
+  const [bookTeacherButton, setBookTeacherButton] = React.useState({
+    text: "Записаться",
+    isDisabled: false,
+  });
   const [addTeacherButtonText, setAddTeacherButtonText] =
     React.useState("Добавить");
   const [loginButtonText, setLoginButtonText] = React.useState("Войти");
   const [isTeacherAddPopupOpen, setIsTeacherAddPopupOpen] =
     React.useState(false);
   const [isLoginPopupOpen, setIsLoginPopupOpen] = React.useState(false);
-  const [isAddUserPopupOpen, setIsAddUserPopupOpen] = React.useState(false);
+  const [currentTeacher, setCurrentTeacher] = React.useState();
   const [isDateChangePopupOpen, setIsDateChangePopupOpen] =
     React.useState(false);
   const [isRegistrationOpen, setIsRegistrationOpen] = React.useState(false);
+  const [isBookTeacherPopupOpen, setIsBookTeacherPopupOpen] =
+    React.useState(false);
   const [isLoggedIn, setIsLoggedIn] = React.useState(false);
   const [practicDate, setPracticDate] = React.useState();
   const [teachersList, setTeachersList] = React.useState([]);
@@ -32,9 +37,6 @@ function App() {
   const [teacherSelectSnackbarMessage, setTeacherSelectSnackbarMessage] =
     React.useState("");
 
-  const handleOpenAddUserPopup = () => {
-    setIsAddUserPopupOpen(true);
-  };
   const handleOpenAddTeacherPopup = () => {
     setAddTeacherButtonText("Добавить");
     setIsTeacherAddPopupOpen(true);
@@ -51,7 +53,7 @@ function App() {
     setIsTeacherAddPopupOpen(false);
     setIsDateChangePopupOpen(false);
     setIsLoginPopupOpen(false);
-    setIsAddUserPopupOpen(false);
+    setIsBookTeacherPopupOpen(false);
   };
 
   const setDate = (date) => {
@@ -126,20 +128,6 @@ function App() {
       });
   };
 
-  const handleUserAdd = (user) => {
-    api
-      .addUser(user)
-      .then((res) => {
-        console.log(res);
-        setAddUserButtonText("Добавлен");
-      })
-      .then(closeAllPopups)
-      .catch((e) => {
-        console.log(e);
-        setAddUserButtonText("Произошла ошибка");
-      });
-  };
-
   const handleLogin = (user) => {
     api
       .userLogin(user)
@@ -155,23 +143,46 @@ function App() {
       });
   };
 
-  const handleTeacherBook = (teacher) => {
+  const handleTeacherBookPopupOpen = (teacher) => {
+    setIsBookTeacherPopupOpen(true);
+    setCurrentTeacher(teacher);
+  };
+
+  const handleTeacherBook = (teacher, user) => {
+    console.log(teacher, user);
     api
-      .userRemoveBookPossibility(currentUser._id)
-      .then((updatedUser) => {
-        setCurrentUser(updatedUser[0]);
-      })
-      .then(() =>
+      .addUser(user)
+      .then((bookingClient) => {
+        console.log(bookingClient);
         api
-          .addClient(teacher._id, currentUser._id, currentUser.fullName)
+          .addClient(teacher._id, bookingClient._id, bookingClient.fullName)
           .then((updatedTeacherCard) => {
+            console.log(teacher, bookingClient);
             setSelectedTeachersList((state) =>
               state.map((t) => (t._id === teacher._id ? updatedTeacherCard : t))
             );
           })
-          .catch((e) => console.log(e))
-      )
+          .catch((e) => console.log(e));
+      })
+      .then(() => closeAllPopups())
       .catch((e) => console.log(e));
+
+    // api
+    //   .userRemoveBookPossibility(currentUser._id)
+    //   .then((updatedUser) => {
+    //     setCurrentUser(updatedUser[0]);
+    //   })
+    //   .then(() =>
+    //     api
+    //       .addClient(teacher._id, currentUser._id, currentUser.fullName)
+    //       .then((updatedTeacherCard) => {
+    //         setSelectedTeachersList((state) =>
+    //           state.map((t) => (t._id === teacher._id ? updatedTeacherCard : t))
+    //         );
+    //       })
+    //       .catch((e) => console.log(e))
+    //   )
+    //   .catch((e) => console.log(e));
   };
 
   const handleTeacherUnbook = (teacher) => {
@@ -235,10 +246,6 @@ function App() {
   };
 
   React.useEffect(() => {
-    setAddUserButtonText("Добавить");
-  }, [isAddUserPopupOpen]);
-
-  React.useEffect(() => {
     const registrationStartDate = new Date(practicDate);
     registrationStartDate.setDate(registrationStartDate.getDate() - 7);
     if (
@@ -291,7 +298,7 @@ function App() {
         handleLoginOpen={handleOpenLoginPopup}
         handleTeacherPopupOpen={handleOpenAddTeacherPopup}
         isLoggedIn={isLoggedIn}
-        handleAddUserPopupOpen={handleOpenAddUserPopup}
+        // handleAddUserPopupOpen={handleOpenAddUserPopup}
         handleLoginPopupOpen={handleOpenLoginPopup}
       />
       <main className="mdl-layout__content">
@@ -332,7 +339,7 @@ function App() {
                           isRegistrationOpen={isRegistrationOpen}
                           onCardDelete={handleTeacherDel}
                           isLoggedIn={isLoggedIn}
-                          onTeacherBook={handleTeacherBook}
+                          onTeacherBook={handleTeacherBookPopupOpen}
                           onTeacherUnbook={handleTeacherUnbook}
                           onSelect={handleTeacherSelect}
                           onDeselect={handleTeacherDeselect}
@@ -352,11 +359,12 @@ function App() {
         onTeacherAdd={handleAddTeacher}
         buttonText={addTeacherButtonText}
       />
-      <AddUserPopup
-        isOpen={isAddUserPopupOpen}
+      <BookTeacherPopup
+        isOpen={isBookTeacherPopupOpen}
         onClose={closeAllPopups}
-        onUserAdd={handleUserAdd}
-        addUserButtonText={addUserButtonText}
+        onTeacherBook={handleTeacherBook}
+        buttonText={bookTeacherButtonText}
+        teacher={currentTeacher}
       />
       <LoginPopup
         isOpen={isLoginPopupOpen}

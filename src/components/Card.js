@@ -6,7 +6,6 @@ function Card({
   onTeacherUnbook,
   onCardDelete,
   isRegistrationOpen,
-  isLoggedIn,
   onSelect,
   onDeselect,
   selectedTeachersList,
@@ -26,22 +25,16 @@ function Card({
     onCardDelete(teacher);
   }
   const clients = teacher.clients ? teacher.clients.length : 0;
-  const haveBookPossibility = user.tickets > 0;
 
-  const isButtonActive =
-    isLoggedIn && !(clients > 1) && isRegistrationOpen && haveBookPossibility;
-
-  const isBookedByMe =
-    clients > 0 &&
-    teacher.clients.some((client) => client.clientId === user._id);
+  const isButtonActive = !(clients > 1) && isRegistrationOpen;
 
   const handleBook = () => {
-    onTeacherBook(teacher, isBookedByMe);
+    onTeacherBook(teacher);
   };
 
-  const handleUnbook = () => {
-    onTeacherUnbook(teacher, isBookedByMe);
-  };
+  // const handleUnbook = () => {
+  //   onTeacherUnbook(teacher, isBookedByMe);
+  // };
 
   const handleSelect = () => {
     console.log(isSelected);
@@ -106,19 +99,11 @@ function Card({
           >
             {clients > 1 ? "Запись закрыта" : "Записаться"}
           </button>
-
-          {isBookedByMe && isLoggedIn && (
-            <button
-              className="mdl-button mdl-js-button mdl-button_bottom-margin mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
-              onClick={handleUnbook}
-            >
-              Отказаться
-            </button>
-          )}
         </div>
 
         <div>
-          {clients > 0 &&
+          {user.isAdmin &&
+            clients > 0 &&
             teacher.clients.map((client, i) => {
               return (
                 <p key={i} className="assistent-card--person">
