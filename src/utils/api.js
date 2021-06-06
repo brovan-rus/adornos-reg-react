@@ -95,8 +95,16 @@ class Api {
     }).then(handleResponse);
   }
 
+  clearTeachersClients(teacherId) {
+    return fetch(`${this._url}/teacher/${teacherId}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).then(handleResponse);
+  }
+
   addClient(teacherId, clientId, clientName) {
-    console.log(teacherId, clientId, clientName);
     return fetch(`${this._url}/clients/${teacherId}`, {
       method: "PUT",
       headers: {
@@ -129,6 +137,15 @@ class Api {
 
   resetUsersBookPossibilities() {
     return fetch(`${this._url}/users`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).then(handleResponse);
+  }
+
+  resetAllTeachersBooking() {
+    return fetch(`${this._url}/teacher`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",

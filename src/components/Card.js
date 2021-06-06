@@ -37,11 +37,9 @@ function Card({
   // };
 
   const handleSelect = () => {
-    console.log(isSelected);
     if (isSelected === false) {
       onSelect(teacher);
     } else {
-      console.log("Снять", teacher);
       onDeselect(teacher);
     }
     setIsSelected(!isSelected);

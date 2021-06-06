@@ -14,10 +14,8 @@ import BookTeacherPopup from "./BookTeacherPopup";
 function App() {
   const [lessonDate, setLessonDate] = React.useState(undefined);
   const [currentUser, setCurrentUser] = React.useState({ isAmin: false });
-  const [bookTeacherButton, setBookTeacherButton] = React.useState({
-    text: "Записаться",
-    isDisabled: false,
-  });
+  const [bookTeacherButtonText, setBookTeacherButtonText] =
+    React.useState("Записаться");
   const [addTeacherButtonText, setAddTeacherButtonText] =
     React.useState("Добавить");
   const [loginButtonText, setLoginButtonText] = React.useState("Войти");
@@ -66,19 +64,20 @@ function App() {
     practicDate.setHours(11, 0);
     api
       .setDate(date)
-      .then((res) => {
-        console.log(res);
+      .then(() => {
         setDate(practicDate);
-        // teachersList.forEach((teacher) => {
-        //   console.log(teacher);
-        //   handleTeacherDel(teacher);
-        // });
         api
           .resetUsersBookPossibilities()
           .then(() => {
             api
-              .clearCurrentTeacherList()
-              .then((res) => console.log(res))
+              .resetAllTeachersBooking()
+              .then((updatedTeachersList) => {
+                setTeachersList(updatedTeachersList);
+                api
+                  .clearCurrentTeacherList()
+                  .then((res) => console.log(res))
+                  .catch((e) => console.log(e));
+              })
               .catch((e) => console.log(e));
           })
           .catch((e) => console.log(e));
@@ -149,40 +148,27 @@ function App() {
   };
 
   const handleTeacherBook = (teacher, user) => {
-    console.log(teacher, user);
     api
       .addUser(user)
       .then((bookingClient) => {
-        console.log(bookingClient);
-        api
-          .addClient(teacher._id, bookingClient._id, bookingClient.fullName)
-          .then((updatedTeacherCard) => {
-            console.log(teacher, bookingClient);
-            setSelectedTeachersList((state) =>
-              state.map((t) => (t._id === teacher._id ? updatedTeacherCard : t))
-            );
-          })
-          .catch((e) => console.log(e));
+        if (bookingClient.tickets < 1) {
+          setBookTeacherButtonText("Максимальное количество записей - 2");
+        } else {
+          api
+            .addClient(teacher._id, bookingClient._id, bookingClient.fullName)
+            .then((updatedTeacherCard) => {
+              console.log(teacher, bookingClient);
+              setSelectedTeachersList((state) =>
+                state.map((t) =>
+                  t._id === teacher._id ? updatedTeacherCard : t
+                )
+              );
+            })
+            .catch((e) => console.log(e));
+        }
       })
       .then(() => closeAllPopups())
       .catch((e) => console.log(e));
-
-    // api
-    //   .userRemoveBookPossibility(currentUser._id)
-    //   .then((updatedUser) => {
-    //     setCurrentUser(updatedUser[0]);
-    //   })
-    //   .then(() =>
-    //     api
-    //       .addClient(teacher._id, currentUser._id, currentUser.fullName)
-    //       .then((updatedTeacherCard) => {
-    //         setSelectedTeachersList((state) =>
-    //           state.map((t) => (t._id === teacher._id ? updatedTeacherCard : t))
-    //         );
-    //       })
-    //       .catch((e) => console.log(e))
-    //   )
-    //   .catch((e) => console.log(e));
   };
 
   const handleTeacherUnbook = (teacher) => {
@@ -228,20 +214,52 @@ function App() {
 
   const handleCurrentTeacherListRenew = () => {
     api
-      .clearCurrentTeacherList()
-      .then(() => setTeacherSelectSnackbarMessage("Обновление..."))
-      .then(() => {
-        selectedTeachersList.forEach((teacher) => {
-          api.addToCurrentTeacherList(teacher).then((res) => console.log(res));
+      .getCurrentTeacherList()
+      .then((previousTeachersList) => {
+        const deletedTeachers = previousTeachersList.filter(
+          (x) => !selectedTeachersList.some((y) => x._id === y._id)
+        );
+        deletedTeachers.forEach((deletedTeacher) => {
+          if (deletedTeacher.clients.length > 0) {
+            deletedTeacher.clients.forEach((client) => {
+              console.log(client);
+              api
+                .userAddBookPossibility(client.clientId)
+                .then((res) => console.log(res))
+                .catch((e) => console.log(e));
+            });
+          }
+          api
+            .clearTeachersClients(deletedTeacher._id)
+            .then((updatedTeacherCard) => {
+              setTeachersList((state) =>
+                state.map((t) =>
+                  t._id === deletedTeacher._id ? updatedTeacherCard : t
+                )
+              );
+            })
+            .catch((e) => console.log(e));
         });
+        api
+          .clearCurrentTeacherList()
+          .then(() => setTeacherSelectSnackbarMessage("Обновление..."))
+          .then(() => {
+            selectedTeachersList.forEach((teacher, i) => {
+              api
+                .addToCurrentTeacherList(teacher)
+                .then((res) => console.log(res))
+                .catch((e) => console.log(e));
+            });
+          })
+          .then(() =>
+            setTimeout(() => {
+              setTeacherSelectSnackbarMessage(
+                `Выбрано: ${selectedTeachersList.length} преподаватель.`
+              );
+            }, 820)
+          )
+          .catch((e) => console.log(e));
       })
-      .then(() =>
-        setTimeout(() => {
-          setTeacherSelectSnackbarMessage(
-            `Выбрано: ${selectedTeachersList.length} преподаватель.`
-          );
-        }, 820)
-      )
       .catch((e) => console.log(e));
   };
 
@@ -282,13 +300,13 @@ function App() {
         setDate(new Date(date));
       })
       .catch((e) => console.log(e));
-  }, []);
+  }, [currentUser]);
 
   return (
     <div className="mdl-layout mdl-js-layout mdl-layout--fixed-header">
       {currentUser.isAdmin && (
         <TeacherSelectSnackbar
-          isOpen={selectedTeachersList.length > 0}
+          isOpen={true}
           message={teacherSelectSnackbarMessage}
           onApprove={handleCurrentTeacherListRenew}
         />
@@ -322,7 +340,7 @@ function App() {
                           isRegistrationOpen={isRegistrationOpen}
                           onCardDelete={handleTeacherDel}
                           isLoggedIn={isLoggedIn}
-                          onTeacherBook={handleTeacherBook}
+                          onTeacherBook={handleTeacherBookPopupOpen}
                           onTeacherUnbook={handleTeacherUnbook}
                           onSelect={handleTeacherSelect}
                           onDeselect={handleTeacherDeselect}
