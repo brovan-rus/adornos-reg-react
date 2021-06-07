@@ -39,6 +39,12 @@ function App() {
     setAddTeacherButtonText("Добавить");
     setIsTeacherAddPopupOpen(true);
   };
+
+  const handleTeacherBookPopupOpen = (teacher) => {
+    setIsBookTeacherPopupOpen(true);
+    setCurrentTeacher(teacher);
+  };
+
   const handleOpenLoginPopup = () => {
     setLoginButtonText("Войти");
     setIsLoginPopupOpen(true);
@@ -142,16 +148,12 @@ function App() {
       });
   };
 
-  const handleTeacherBookPopupOpen = (teacher) => {
-    setIsBookTeacherPopupOpen(true);
-    setCurrentTeacher(teacher);
-  };
-
   const handleTeacherBook = (teacher, user) => {
     api
       .addUser(user)
       .then((bookingClient) => {
-        if (bookingClient.tickets < 1) {
+        console.log(teacher._id, bookingClient);
+        if (bookingClient.tickets + 1 < 1) {
           setBookTeacherButtonText("Максимальное количество записей - 2");
         } else {
           api
@@ -244,7 +246,7 @@ function App() {
           .clearCurrentTeacherList()
           .then(() => setTeacherSelectSnackbarMessage("Обновление..."))
           .then(() => {
-            selectedTeachersList.forEach((teacher, i) => {
+            selectedTeachersList.forEach((teacher) => {
               api
                 .addToCurrentTeacherList(teacher)
                 .then((res) => console.log(res))

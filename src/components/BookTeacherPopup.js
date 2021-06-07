@@ -80,7 +80,7 @@ function BookTeacherPopup({
         placeholder="Телефон 7(___)___-__-__"
         title="Номер должен содержать 11 цифр и начинаться с 7"
         //pattern="7\([0-9]{3}\)[0-9]{3}-[0-9]{2}-[0-9]{2}"
-        maxlength="15"
+        maxLength="15"
         id="phone"
         className="form__input"
         required
