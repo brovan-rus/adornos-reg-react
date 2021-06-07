@@ -81,7 +81,12 @@ function App() {
                 setTeachersList(updatedTeachersList);
                 api
                   .clearCurrentTeacherList()
-                  .then((res) => console.log(res))
+                  .then((res) => {
+                    setSelectedTeachersList([]);
+                    setTeacherSelectSnackbarMessage(
+                      `Выбрано: 0 преподавателей.`
+                    );
+                  })
                   .catch((e) => console.log(e));
               })
               .catch((e) => console.log(e));
@@ -96,7 +101,7 @@ function App() {
     if (teacher.clients) {
       teacher.clients.forEach((client) => {
         api
-          .userAddBookPossibility(client.clientId)
+          .userAddBookPossibility(client.id)
           .then((res) => console.log(res))
           .catch((e) => console.log(e));
       });

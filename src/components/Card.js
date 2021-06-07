@@ -20,7 +20,7 @@ function Card({
           return selectedTeacher._id === teacher._id;
         })
     );
-  }, []);
+  }, [selectedTeachersList]);
 
   function handleCardDelete() {
     onCardDelete(teacher);
@@ -101,20 +101,18 @@ function Card({
         </div>
 
         <div>
-          {
-            //user.isAdmin &&
+          {user.isAdmin &&
             clients > 0 &&
-              teacher.clients.map((client) => {
-                return (
-                  <ClientChip
-                    key={client.id}
-                    className="assistent-card--person"
-                    title={client.email}
-                    onDelete={() => handleUnbook(client.id)}
-                  />
-                );
-              })
-          }
+            teacher.clients.map((client) => {
+              return (
+                <ClientChip
+                  key={client.id}
+                  className="assistent-card--person"
+                  title={client.email}
+                  onDelete={() => handleUnbook(client.id)}
+                />
+              );
+            })}
         </div>
       </div>
     </div>
