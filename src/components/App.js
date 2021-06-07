@@ -175,15 +175,13 @@ function App() {
       .catch((e) => console.log(e));
   };
 
-  const handleTeacherUnbook = (teacher) => {
+  const handleTeacherUnbook = (teacher, clientId) => {
+    console.log("Start unbooking", teacher, clientId);
     api
-      .userAddBookPossibility(currentUser._id)
-      .then((updatedUser) => {
-        setCurrentUser(updatedUser[0]);
-      })
+      .userAddBookPossibility(clientId)
       .then(() =>
         api
-          .removeClient(teacher._id, currentUser._id)
+          .removeClient(teacher._id, clientId)
           .then((updatedTeacherCard) => {
             setSelectedTeachersList((state) =>
               state.map((t) => (t._id === teacher._id ? updatedTeacherCard : t))

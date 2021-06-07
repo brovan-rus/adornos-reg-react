@@ -1,4 +1,5 @@
 import React from "react";
+import ClientChip from "./ClientChip";
 function Card({
   teacher,
   user,
@@ -32,10 +33,6 @@ function Card({
     onTeacherBook(teacher);
   };
 
-  // const handleUnbook = () => {
-  //   onTeacherUnbook(teacher, isBookedByMe);
-  // };
-
   const handleSelect = () => {
     if (isSelected === false) {
       onSelect(teacher);
@@ -43,6 +40,10 @@ function Card({
       onDeselect(teacher);
     }
     setIsSelected(!isSelected);
+  };
+
+  const handleUnbook = (clientId) => {
+    onTeacherUnbook(teacher, clientId);
   };
 
   return (
@@ -100,15 +101,20 @@ function Card({
         </div>
 
         <div>
-          {user.isAdmin &&
+          {
+            //user.isAdmin &&
             clients > 0 &&
-            teacher.clients.map((client, i) => {
-              return (
-                <p key={i} className="assistent-card--person">
-                  {client.email}
-                </p>
-              );
-            })}
+              teacher.clients.map((client) => {
+                return (
+                  <ClientChip
+                    key={client.id}
+                    className="assistent-card--person"
+                    title={client.email}
+                    onDelete={() => handleUnbook(client.id)}
+                  />
+                );
+              })
+          }
         </div>
       </div>
     </div>
