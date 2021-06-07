@@ -152,14 +152,16 @@ function App() {
     api
       .addUser(user)
       .then((bookingClient) => {
-        console.log(teacher._id, bookingClient);
-        if (bookingClient.tickets + 1 < 1) {
+        if (bookingClient.tickets < 1) {
           setBookTeacherButtonText("Максимальное количество записей - 2");
         } else {
           api
-            .addClient(teacher._id, bookingClient._id, bookingClient.fullName)
+            .addClient(teacher._id, bookingClient)
             .then((updatedTeacherCard) => {
-              console.log(teacher, bookingClient);
+              api
+                .userRemoveBookPossibility(bookingClient._id)
+                .then((res) => console.log(res))
+                .catch((e) => console.log(e));
               setSelectedTeachersList((state) =>
                 state.map((t) =>
                   t._id === teacher._id ? updatedTeacherCard : t
@@ -226,7 +228,7 @@ function App() {
             deletedTeacher.clients.forEach((client) => {
               console.log(client);
               api
-                .userAddBookPossibility(client.clientId)
+                .userAddBookPossibility(client.id)
                 .then((res) => console.log(res))
                 .catch((e) => console.log(e));
             });

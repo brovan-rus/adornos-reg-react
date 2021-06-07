@@ -105,7 +105,7 @@ function Card({
             teacher.clients.map((client, i) => {
               return (
                 <p key={i} className="assistent-card--person">
-                  {client.clientName}
+                  {client.email}
                 </p>
               );
             })}
