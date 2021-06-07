@@ -43,6 +43,7 @@ function App() {
   const handleTeacherBookPopupOpen = (teacher) => {
     setIsBookTeacherPopupOpen(true);
     setCurrentTeacher(teacher);
+    setBookTeacherButtonText("Записаться");
   };
 
   const handleOpenLoginPopup = () => {
@@ -157,8 +158,11 @@ function App() {
     api
       .addUser(user)
       .then((bookingClient) => {
+        console.log("Вернули пользователя", user);
         if (bookingClient.tickets < 1) {
-          setBookTeacherButtonText("Максимальное количество записей - 2");
+          setBookTeacherButtonText(
+            "Вы достигли максимального количества записей."
+          );
         } else {
           api
             .addClient(teacher._id, bookingClient)
@@ -173,22 +177,26 @@ function App() {
                 )
               );
             })
-            .catch((e) => console.log(e));
+            .then(closeAllPopups)
+            .catch((e) => {
+              console.log(e);
+              setBookTeacherButtonText(
+                "Вы уже записаны к этому преподавателю!"
+              );
+            });
         }
       })
-      .then(() => closeAllPopups())
       .catch((e) => console.log(e));
   };
 
   const handleTeacherUnbook = (teacher, clientId) => {
-    console.log("Start unbooking", teacher, clientId);
     api
       .userAddBookPossibility(clientId)
       .then(() =>
         api
           .removeClient(teacher._id, clientId)
           .then((updatedTeacherCard) => {
-            setSelectedTeachersList((state) =>
+            setTeachersList((state) =>
               state.map((t) => (t._id === teacher._id ? updatedTeacherCard : t))
             );
           })

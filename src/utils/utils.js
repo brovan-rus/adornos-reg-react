@@ -20,7 +20,7 @@ export const dateFormat = (d) => {
 
 export function handleResponse(res) {
   if (!res.ok) {
-    return Promise.reject(`Ошибка ${res}`);
+    return Promise.reject(`Ошибка ${res.status}`);
   } else {
     return res.json();
   }
