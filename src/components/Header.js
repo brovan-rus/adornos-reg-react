@@ -1,16 +1,16 @@
+import Logo from "./Logo";
 function Header({
   isAdmin,
   handleLoginPopupOpen,
-  // handleAddUserPopupOpen,
   handleTeacherPopupOpen,
   isLoggedIn,
 }) {
   return (
     <>
-      <header className="mdl-layout__header">
-        <div className="mdl-layout__header-row">
+      <header className="mdl-layout__header ">
+        <div className="mdl-layout__header-row header">
+          <Logo />
           <h1 className="mdl-layout-title">Регистрация на практику</h1>
-          <div className="mdl-layout-spacer"></div>
           <nav className="mdl-navigation mdl-layout--large-screen-only">
             {!isLoggedIn && (
               <a
@@ -37,16 +37,6 @@ function Header({
                 Добавить преподавателя
               </a>
             )}
-
-            {/*{isAdmin && (*/}
-            {/*  <a*/}
-            {/*    className="mdl-navigation__link link"*/}
-            {/*    onClick={handleAddUserPopupOpen}*/}
-            {/*    href="#"*/}
-            {/*  >*/}
-            {/*    Добавить пользователя*/}
-            {/*  </a>*/}
-            {/*)}*/}
           </nav>
         </div>
       </header>

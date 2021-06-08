@@ -1,0 +1,9 @@
+.card__mdl-button_color_red {
+  background: #ef483f !important;
+}
+
+.mdl-button--raised[disabled][disabled], .mdl-button--raised.mdl-button--disabled.mdl-button--disabled {
+  background-color: rgba(0,0,0,.12) !important;
+  color: rgba(0,0,0,.26) !important;
+  box-shadow: none;
+}

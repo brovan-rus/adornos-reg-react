@@ -19,6 +19,10 @@
 @import url("./blocks/form/__input-error/form__input-error.css");
 @import url("./blocks/form/__submit-button/form__submit-button.css");
 @import url("./blocks/form/__submit-button/_disabled/form__submit-button_disabled.css");
+@import url("./blocks/card/__mdl-badge/_color/card__mdl-badge_color_red.css");
+@import url("./blocks/card/__mdl-button/_color/card__mdl-button_color_red.css");
+@import url("./blocks/header/header.css");
+@import url("./blocks/header/__logo/header__logo.css");
 @import url("./blocks/link/link.css");
 @import url("./blocks/form/__input/_type/form__imput_type_price.css");
 @import url("./blocks/form/__input/_type/form__input_type_description.css");

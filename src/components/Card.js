@@ -20,7 +20,7 @@ function Card({
           return selectedTeacher._id === teacher._id;
         })
     );
-  }, [selectedTeachersList]);
+  }, [selectedTeachersList, teacher._id]);
 
   function handleCardDelete() {
     onCardDelete(teacher);
@@ -77,7 +77,7 @@ function Card({
       </div>
       <div className="mdl-card__menu">
         <span
-          className="mdl-badge mdl-badge--dark-background"
+          className="mdl-badge mdl-badge--dark-background card__mdl-badge_color_red"
           data-badge={2 - clients}
         >
           Свободно заходов
@@ -92,7 +92,7 @@ function Card({
       <div className="two-columns">
         <div className="mdl-card__actions mdl-card--border mdl-card__actions_two-columns">
           <button
-            className="mdl-button mdl-js-button mdl-button_bottom-margin mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
+            className="mdl-button mdl-js-button mdl-button_bottom-margin mdl-button--raised mdl-js-ripple-effect mdl-button--accent card__mdl-button_color_red "
             disabled={!isButtonActive}
             onClick={handleBook}
           >
