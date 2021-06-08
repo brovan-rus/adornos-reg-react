@@ -155,7 +155,6 @@ function App() {
     api
       .addUser(user)
       .then((bookingClient) => {
-        console.log("Вернули пользователя", user);
         if (bookingClient.tickets < 1) {
           setBookTeacherButtonText(
             "Вы достигли максимального количества записей."
@@ -164,11 +163,18 @@ function App() {
           api
             .addClient(teacher._id, bookingClient)
             .then((updatedTeacherCard) => {
-              api
-                .userRemoveBookPossibility(bookingClient._id)
-                .then((res) => console.log(res))
-                .catch((e) => console.log(e));
-
+              teacher.price > 0
+                ? api
+                    .userRemoveBookPossibility(bookingClient._id)
+                    .then((res) => console.log(res))
+                    .catch((e) => console.log(e))
+                : api
+                    .userRemoveBookPossibility(bookingClient._id)
+                    .then(() =>
+                      api.userRemoveBookPossibility(bookingClient._id)
+                    )
+                    .then((res) => console.log(res))
+                    .catch((e) => console.log(e));
               setSelectedTeachersList((state) =>
                 state.map((t) =>
                   t._id === teacher._id ? updatedTeacherCard : t
@@ -193,19 +199,38 @@ function App() {
   };
 
   const handleTeacherUnbook = async (teacher, clientId) => {
-    api
-      .userAddBookPossibility(clientId)
-      .then(() =>
-        api
-          .removeClient(teacher._id, clientId)
-          .then((updatedTeacherCard) => {
-            setTeachersList((state) =>
-              state.map((t) => (t._id === teacher._id ? updatedTeacherCard : t))
-            );
-          })
+    teacher.price > 0
+      ? api
+          .userAddBookPossibility(clientId)
+          .then(() =>
+            api
+              .removeClient(teacher._id, clientId)
+              .then((updatedTeacherCard) => {
+                setTeachersList((state) =>
+                  state.map((t) =>
+                    t._id === teacher._id ? updatedTeacherCard : t
+                  )
+                );
+              })
+              .catch((e) => console.log(e))
+          )
           .catch((e) => console.log(e))
-      )
-      .catch((e) => console.log(e));
+      : api
+          .userAddBookPossibility(clientId)
+          .then(() => api.userAddBookPossibility(clientId))
+          .then(() =>
+            api
+              .removeClient(teacher._id, clientId)
+              .then((updatedTeacherCard) => {
+                setTeachersList((state) =>
+                  state.map((t) =>
+                    t._id === teacher._id ? updatedTeacherCard : t
+                  )
+                );
+              })
+              .catch((e) => console.log(e))
+          )
+          .catch((e) => console.log(e));
   };
 
   const handleTeacherSelect = (selectedTeacher) => {

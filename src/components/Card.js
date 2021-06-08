@@ -27,7 +27,8 @@ function Card({
   }
   const clients = teacher.clients ? teacher.clients.length : 0;
 
-  const isButtonActive = !(clients > 1) && isRegistrationOpen;
+  const isButtonActive =
+    (!(clients > 1) || teacher.price === 0) && isRegistrationOpen;
 
   const handleBook = () => {
     onTeacherBook(teacher);
@@ -100,7 +101,7 @@ function Card({
             disabled={!isButtonActive}
             onClick={handleBook}
           >
-            {clients > 1 ? "Запись закрыта" : "Записаться"}
+            {clients > 1 && teacher.price > 0 ? "Запись закрыта" : "Записаться"}
           </button>
         </div>
 
