@@ -75,20 +75,24 @@ function Card({
       <div className="mdl-card__title">
         <h2 className="mdl-card__title-text">{teacher.name}</h2>
       </div>
-      <div className="mdl-card__menu">
-        <span
-          className="mdl-badge mdl-badge--dark-background card__mdl-badge_color_red"
-          data-badge={2 - clients}
-        >
-          Свободно заходов
-        </span>
-      </div>
+      {teacher.price > 0 && (
+        <div className="mdl-card__menu">
+          <span
+            className="mdl-badge mdl-badge--dark-background card__mdl-badge_color_red"
+            data-badge={2 - clients}
+          >
+            Свободно заходов
+          </span>
+        </div>
+      )}
       <div className="mdl-card__supporting-text card__description">
         {teacher.description}
       </div>
-      <div className="mdl-card__supporting-text">
-        Стоимость захода составляет {teacher.price} руб.
-      </div>
+      {teacher.price > 0 && (
+        <div className="mdl-card__supporting-text">
+          Стоимость захода составляет {teacher.price} руб.
+        </div>
+      )}
       <div className="two-columns">
         <div className="mdl-card__actions mdl-card--border mdl-card__actions_two-columns">
           <button
