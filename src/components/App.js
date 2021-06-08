@@ -82,7 +82,7 @@ function App() {
                 setTeachersList(updatedTeachersList);
                 api
                   .clearCurrentTeacherList()
-                  .then((res) => {
+                  .then(() => {
                     setSelectedTeachersList([]);
                     setTeacherSelectSnackbarMessage(
                       `Выбрано: 0 преподавателей.`
@@ -98,14 +98,11 @@ function App() {
       .finally(closeAllPopups);
   };
 
-  const handleTeacherDel = (teacher) => {
+  const handleTeacherDel = async (teacher) => {
     if (teacher.clients) {
-      teacher.clients.forEach((client) => {
-        api
-          .userAddBookPossibility(client.id)
-          .then((res) => console.log(res))
-          .catch((e) => console.log(e));
-      });
+      for (const client of teacher.clients) {
+        await handleTeacherUnbook(teacher, client.id);
+      }
       api
         .removeTeacherCard(teacher._id)
         .then(() => {
@@ -171,7 +168,13 @@ function App() {
                 .userRemoveBookPossibility(bookingClient._id)
                 .then((res) => console.log(res))
                 .catch((e) => console.log(e));
+
               setSelectedTeachersList((state) =>
+                state.map((t) =>
+                  t._id === teacher._id ? updatedTeacherCard : t
+                )
+              );
+              setTeachersList((state) =>
                 state.map((t) =>
                   t._id === teacher._id ? updatedTeacherCard : t
                 )
@@ -189,7 +192,7 @@ function App() {
       .catch((e) => console.log(e));
   };
 
-  const handleTeacherUnbook = (teacher, clientId) => {
+  const handleTeacherUnbook = async (teacher, clientId) => {
     api
       .userAddBookPossibility(clientId)
       .then(() =>
@@ -331,7 +334,6 @@ function App() {
         handleLoginOpen={handleOpenLoginPopup}
         handleTeacherPopupOpen={handleOpenAddTeacherPopup}
         isLoggedIn={isLoggedIn}
-        // handleAddUserPopupOpen={handleOpenAddUserPopup}
         handleLoginPopupOpen={handleOpenLoginPopup}
       />
       <main className="mdl-layout__content">
