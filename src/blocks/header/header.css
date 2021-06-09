@@ -3,3 +3,13 @@
   justify-content: space-between;
   padding: 0 70px 0 10px;
 }
+
+@media screen and (max-width: 1025px) {
+  .header {
+    padding: 0 70px;
+  }
+}
+
+.mdl-layout__drawer-button {
+  background-color: #ff6868 !important;
+}
