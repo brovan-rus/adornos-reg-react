@@ -12,14 +12,14 @@ function Intro({
           isAdmin && "change-title"
         }`}
       >
-        {" "}
-        Регистрация на ближайшую практику школе Adornos Center {date}{" "}
+        Регистрация на практику {date}
+      </h2>
+      <h2 className="mdl-typography--title-color-contrast mdl-typography--text-center intro-subtitle">
         {isRegistrationOpen && "открыта!"}
       </h2>
       <p className="mdl-typography--body-1-color-contrast mdl-typography--font-light">
-        Для выбора ассистента и записи на практике необходимо
-        зарегистрироваться. Запись открывается ровно за неделю до начала
-        практики.
+        Для выбора ассистента и записи на практику необходимо
+        зарегистрироваться. Запись открывается за неделю до начала практики.
       </p>
       <p className="mdl-typography--body-1-color-contrast mdl-typography--font-light">
         На текущей практике будут ассистировать:

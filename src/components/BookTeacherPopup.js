@@ -55,7 +55,7 @@ function BookTeacherPopup({
         maxLength="30"
         type="text"
         name="name"
-        placeholder="Представьтесь пожалуйста"
+        placeholder="Представьтесь, пожалуйста"
         value={name}
         onChange={handleSetName}
       />
