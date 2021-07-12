@@ -70,29 +70,17 @@ function App() {
     const practicDate = new Date(date);
     practicDate.setHours(11, 0);
     api
-      .setDate(date)
+      .setDate(practicDate)
       .then(() => {
-        setDate(practicDate);
-        api
-          .resetUsersBookPossibilities()
-          .then(() => {
-            api
-              .resetAllTeachersBooking()
-              .then((updatedTeachersList) => {
-                setTeachersList(updatedTeachersList);
-                api
-                  .clearCurrentTeacherList()
-                  .then(() => {
-                    setSelectedTeachersList([]);
-                    setTeacherSelectSnackbarMessage(
-                      `Выбрано: 0 преподавателей.`
-                    );
-                  })
-                  .catch((e) => console.log(e));
-              })
-              .catch((e) => console.log(e));
-          })
-          .catch((e) => console.log(e));
+        api.resetUsersBookPossibilities().then(() => {
+          api.resetAllTeachersBooking().then((updatedTeachersList) => {
+            setTeachersList(updatedTeachersList);
+            api.clearCurrentTeacherList().then(() => {
+              setSelectedTeachersList([]);
+              setTeacherSelectSnackbarMessage(`Выбрано: 0 преподавателей.`);
+            });
+          });
+        });
       })
       .catch((e) => console.log(e))
       .finally(closeAllPopups);
