@@ -1,4 +1,4 @@
-.card__trash-button{
+.card__button {
   z-index: 2;
   width: 40px;
   height: 40px;
@@ -6,7 +6,6 @@
   background-size: initial;
   background-repeat: no-repeat;
   background-position: center;
-  background-image: url('../../../images/Trash.svg');
   transition: all 0.3s linear;
   background-color: rgba(0, 0, 0, 0);
   border: 1px solid rgba(255, 255, 255, 0.6);
@@ -17,7 +16,7 @@
 
 }
 
-.card__trash-button:hover{
+.card__button:hover{
   opacity: 0.6;
 }
 

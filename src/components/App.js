@@ -10,9 +10,11 @@ import { dateFormat } from "../utils/utils";
 import api from "../utils/api";
 import TeacherSelectSnackbar from "./TeacherSelectSnackbar";
 import BookTeacherPopup from "./BookTeacherPopup";
+import EditTeacherPopup from "./EditTeacherPopup";
 
 function App() {
-  const [lessonDate, setLessonDate] = React.useState(undefined);
+  const [formattedPracticDate, setFormattedPracticDate] =
+    React.useState(undefined);
   const [currentUser, setCurrentUser] = React.useState({ isAmin: false });
   const [bookTeacherButtonText, setBookTeacherButtonText] =
     React.useState("Записаться");
@@ -34,10 +36,22 @@ function App() {
   const [selectedTeachersList, setSelectedTeachersList] = React.useState([]);
   const [teacherSelectSnackbarMessage, setTeacherSelectSnackbarMessage] =
     React.useState("");
+  const [editTeacherButtonText, setEditTeacherButtonText] =
+    React.useState("Изменить");
+  const [isTeacherEditPopupOpen, setIsTeacherEditPopupOpen] =
+    React.useState(false);
+  const [currentTeacherData, setCurrentTeacherData] = React.useState({});
 
   const handleOpenAddTeacherPopup = () => {
     setAddTeacherButtonText("Добавить");
     setIsTeacherAddPopupOpen(true);
+  };
+
+  const handleOpenTeacherEditPopup = (teacherData) => {
+    setAddTeacherButtonText("Изменить");
+    setCurrentTeacherData(teacherData);
+    console.log(currentTeacherData);
+    setIsTeacherEditPopupOpen(true);
   };
 
   const handleTeacherBookPopupOpen = (teacher) => {
@@ -59,40 +73,30 @@ function App() {
     setIsDateChangePopupOpen(false);
     setIsLoginPopupOpen(false);
     setIsBookTeacherPopupOpen(false);
+    setIsTeacherEditPopupOpen(false);
   };
 
-  const setDate = (date) => {
+  const setDateOnPage = (date) => {
     setPracticDate(date);
-    setLessonDate(dateFormat(date));
+    setFormattedPracticDate(dateFormat(date));
   };
 
   const handleChangeDate = (date) => {
     const practicDate = new Date(date);
     practicDate.setHours(11, 0);
     api
-      .setDate(date)
+      .setDate(practicDate)
       .then(() => {
-        setDate(practicDate);
-        api
-          .resetUsersBookPossibilities()
-          .then(() => {
-            api
-              .resetAllTeachersBooking()
-              .then((updatedTeachersList) => {
-                setTeachersList(updatedTeachersList);
-                api
-                  .clearCurrentTeacherList()
-                  .then(() => {
-                    setSelectedTeachersList([]);
-                    setTeacherSelectSnackbarMessage(
-                      `Выбрано: 0 преподавателей.`
-                    );
-                  })
-                  .catch((e) => console.log(e));
-              })
-              .catch((e) => console.log(e));
-          })
-          .catch((e) => console.log(e));
+        setDateOnPage(practicDate);
+        api.resetUsersBookPossibilities().then(() => {
+          api.resetAllTeachersBooking().then((updatedTeachersList) => {
+            setTeachersList(updatedTeachersList);
+            api.clearCurrentTeacherList().then(() => {
+              setSelectedTeachersList([]);
+              setTeacherSelectSnackbarMessage(`Выбрано: 0 преподавателей.`);
+            });
+          });
+        });
       })
       .catch((e) => console.log(e))
       .finally(closeAllPopups);
@@ -126,13 +130,26 @@ function App() {
   const handleAddTeacher = (teacher) => {
     api
       .addTeacherCard(teacher)
-      .then((newTeacher) => {
-        setTeachersList([newTeacher, ...teachersList]);
-      })
+      .then((newTeacher) => setTeachersList([newTeacher, ...teachersList]))
       .then(closeAllPopups)
       .catch((e) => {
         console.log(e);
         setAddTeacherButtonText("Заполните все поля");
+      });
+  };
+
+  const handleEditTeacher = (teacher) => {
+    api
+      .updateTeacherData(currentTeacherData._id, teacher)
+      .then((editedTeacher) => {
+        setTeachersList((state) =>
+          state.map((t) => (t._id === editedTeacher._id ? editedTeacher : t))
+        );
+      })
+      .then(closeAllPopups)
+      .catch((e) => {
+        console.log(e);
+        setEditTeacherButtonText("Проверьте корректность заполнения формы");
       });
   };
 
@@ -340,7 +357,7 @@ function App() {
     api
       .getDate()
       .then((date) => {
-        setDate(new Date(date));
+        setDateOnPage(new Date(date));
       })
       .catch((e) => console.log(e));
   }, [currentUser]);
@@ -365,7 +382,7 @@ function App() {
         <div className="page-content">
           <div className="mdl-grid">
             <Intro
-              date={lessonDate}
+              date={formattedPracticDate}
               isAdmin={currentUser.isAdmin}
               handleOpenDateChangePopup={handleOpenDateChangePopup}
               isRegistrationOpen={isRegistrationOpen}
@@ -387,6 +404,7 @@ function App() {
                           onSelect={handleTeacherSelect}
                           onDeselect={handleTeacherDeselect}
                           selectedTeachersList={selectedTeachersList}
+                          onCardEdit={handleOpenTeacherEditPopup}
                         />
                       );
                     })
@@ -418,6 +436,13 @@ function App() {
         onClose={closeAllPopups}
         onTeacherAdd={handleAddTeacher}
         buttonText={addTeacherButtonText}
+      />
+      <EditTeacherPopup
+        isOpen={isTeacherEditPopupOpen}
+        onClose={closeAllPopups}
+        onTeacherEdit={handleEditTeacher}
+        buttonText={editTeacherButtonText}
+        currentTeacherData={currentTeacherData}
       />
       <BookTeacherPopup
         isOpen={isBookTeacherPopupOpen}

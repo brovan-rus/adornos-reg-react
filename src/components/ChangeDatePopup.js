@@ -16,7 +16,7 @@ function ChangeDatePopup({ isOpen, onClose, onDateChange, currentDate }) {
     if (currentDate) {
       setDate(currentDate.toISOString().substr(0, 10));
     }
-  }, [isOpen]);
+  }, [isOpen, currentDate]);
 
   return (
     <PopupWithForm
