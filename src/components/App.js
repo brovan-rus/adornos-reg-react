@@ -130,9 +130,7 @@ function App() {
   const handleAddTeacher = (teacher) => {
     api
       .addTeacherCard(teacher)
-      .then((newTeacher) => {
-        setTeachersList([newTeacher, ...teachersList]);
-      })
+      .then((newTeacher) => setTeachersList([newTeacher, ...teachersList]))
       .then(closeAllPopups)
       .catch((e) => {
         console.log(e);
@@ -140,7 +138,20 @@ function App() {
       });
   };
 
-  const handleEditTeacher = () => {};
+  const handleEditTeacher = (teacher) => {
+    api
+      .updateTeacherData(currentTeacherData._id, teacher)
+      .then((editedTeacher) => {
+        setTeachersList((state) =>
+          state.map((t) => (t._id === editedTeacher._id ? editedTeacher : t))
+        );
+      })
+      .then(closeAllPopups)
+      .catch((e) => {
+        console.log(e);
+        setEditTeacherButtonText("Проверьте корректность заполнения формы");
+      });
+  };
 
   const handleLogin = (user) => {
     api
@@ -429,7 +440,7 @@ function App() {
       <EditTeacherPopup
         isOpen={isTeacherEditPopupOpen}
         onClose={closeAllPopups}
-        onTeacherAdd={handleEditTeacher}
+        onTeacherEdit={handleEditTeacher}
         buttonText={editTeacherButtonText}
         currentTeacherData={currentTeacherData}
       />

@@ -95,12 +95,27 @@ class Api {
     }).then(handleResponse);
   }
 
-  clearTeachersClients(teacherId) {
+  clearTeachersClients(teacherId, teacherData) {
     return fetch(`${this._url}/teacher/${teacherId}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },
+    }).then(handleResponse);
+  }
+
+  updateTeacherData(teacherId, teacherData) {
+    return fetch(`${this._url}/teacher/${teacherId}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: teacherData.name,
+        description: teacherData.description,
+        price: teacherData.price,
+        photoUrl: teacherData.photoUrl,
+      }),
     }).then(handleResponse);
   }
 

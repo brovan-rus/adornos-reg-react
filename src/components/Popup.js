@@ -6,7 +6,7 @@ function Popup({ isOpen, onClose, content, children }) {
   };
   return (
     <div
-      onClick={overlayHandler}
+      onMouseDown={overlayHandler}
       className={`popup popup_content_${content}, ${
         isOpen ? "popup_opened" : ""
       }`}
