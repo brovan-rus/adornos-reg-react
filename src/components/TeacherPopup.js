@@ -39,7 +39,7 @@ function TeacherPopup({
 
   React.useEffect(() => {
     setName(currentTeacherData.name);
-    setUrl(currentTeacherData.url);
+    setUrl(currentTeacherData.photoUrl);
     setPrice(currentTeacherData.price);
     setDescription(currentTeacherData.description);
   }, [isOpen]);

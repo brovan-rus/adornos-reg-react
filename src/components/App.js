@@ -10,6 +10,7 @@ import { dateFormat } from "../utils/utils";
 import api from "../utils/api";
 import TeacherSelectSnackbar from "./TeacherSelectSnackbar";
 import BookTeacherPopup from "./BookTeacherPopup";
+import EditTeacherPopup from "./EditTeacherPopup";
 
 function App() {
   const [formattedPracticDate, setFormattedPracticDate] =
@@ -35,6 +36,11 @@ function App() {
   const [selectedTeachersList, setSelectedTeachersList] = React.useState([]);
   const [teacherSelectSnackbarMessage, setTeacherSelectSnackbarMessage] =
     React.useState("");
+  const [editTeacherButtonText, setEditTeacherButtonText] =
+    React.useState("Изменить");
+  const [isTeacherEditPopupOpen, setIsTeacherEditPopupOpen] =
+    React.useState(false);
+  const [currentTeacherData, setCurrentTeacherData] = React.useState({});
 
   const handleOpenAddTeacherPopup = () => {
     setAddTeacherButtonText("Добавить");
@@ -43,7 +49,9 @@ function App() {
 
   const handleOpenTeacherEditPopup = (teacherData) => {
     setAddTeacherButtonText("Изменить");
-    setIsTeacherAddPopupOpen(true);
+    setCurrentTeacherData(teacherData);
+    console.log(currentTeacherData);
+    setIsTeacherEditPopupOpen(true);
   };
 
   const handleTeacherBookPopupOpen = (teacher) => {
@@ -65,6 +73,7 @@ function App() {
     setIsDateChangePopupOpen(false);
     setIsLoginPopupOpen(false);
     setIsBookTeacherPopupOpen(false);
+    setIsTeacherEditPopupOpen(false);
   };
 
   const setDateOnPage = (date) => {
@@ -130,6 +139,8 @@ function App() {
         setAddTeacherButtonText("Заполните все поля");
       });
   };
+
+  const handleEditTeacher = () => {};
 
   const handleLogin = (user) => {
     api
@@ -414,6 +425,13 @@ function App() {
         onClose={closeAllPopups}
         onTeacherAdd={handleAddTeacher}
         buttonText={addTeacherButtonText}
+      />
+      <EditTeacherPopup
+        isOpen={isTeacherEditPopupOpen}
+        onClose={closeAllPopups}
+        onTeacherAdd={handleEditTeacher}
+        buttonText={editTeacherButtonText}
+        currentTeacherData={currentTeacherData}
       />
       <BookTeacherPopup
         isOpen={isBookTeacherPopupOpen}
