@@ -2,8 +2,6 @@
 @import url("https://code.getmdl.io/1.3.0/material.indigo-pink.min.css");
 @import url("./blocks/assistent-card.css");
 @import url("blocks/cards/cards.css");
-@import url("./blocks/card/__trash-button/card__trash-button.css");
-@import url("./blocks/card/__trash-button/_inactive/card__trash-button_inactive.css");
 @import url("./blocks/card/__select/card__select.css");
 @import url("./blocks/card/__controls/card__controls.css");
 @import url("./blocks/popup/popup.css");
@@ -35,3 +33,6 @@
 @import url("blocks/snackbar/__icon/_hidden/snackbar__icon_hidden.css");
 @import url("blocks/card/__controls/_hidden/card__controls_hidden.css");
 @import url("blocks/intro-subtitle/intro-subtitle.css");
+@import url("blocks/card/__button/card__button.css");
+@import url("blocks/card/__button/_action/card__button_aciton_delete.css");
+@import url("blocks/card/__button/_action/card__button_action_edit.css");

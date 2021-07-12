@@ -12,7 +12,8 @@ import TeacherSelectSnackbar from "./TeacherSelectSnackbar";
 import BookTeacherPopup from "./BookTeacherPopup";
 
 function App() {
-  const [lessonDate, setLessonDate] = React.useState(undefined);
+  const [formattedPracticDate, setFormattedPracticDate] =
+    React.useState(undefined);
   const [currentUser, setCurrentUser] = React.useState({ isAmin: false });
   const [bookTeacherButtonText, setBookTeacherButtonText] =
     React.useState("Записаться");
@@ -61,9 +62,9 @@ function App() {
     setIsBookTeacherPopupOpen(false);
   };
 
-  const setDate = (date) => {
+  const setDateOnPage = (date) => {
     setPracticDate(date);
-    setLessonDate(dateFormat(date));
+    setFormattedPracticDate(dateFormat(date));
   };
 
   const handleChangeDate = (date) => {
@@ -72,6 +73,7 @@ function App() {
     api
       .setDate(practicDate)
       .then(() => {
+        setDateOnPage(practicDate);
         api.resetUsersBookPossibilities().then(() => {
           api.resetAllTeachersBooking().then((updatedTeachersList) => {
             setTeachersList(updatedTeachersList);
@@ -328,7 +330,7 @@ function App() {
     api
       .getDate()
       .then((date) => {
-        setDate(new Date(date));
+        setDateOnPage(new Date(date));
       })
       .catch((e) => console.log(e));
   }, [currentUser]);
@@ -353,7 +355,7 @@ function App() {
         <div className="page-content">
           <div className="mdl-grid">
             <Intro
-              date={lessonDate}
+              date={formattedPracticDate}
               isAdmin={currentUser.isAdmin}
               handleOpenDateChangePopup={handleOpenDateChangePopup}
               isRegistrationOpen={isRegistrationOpen}

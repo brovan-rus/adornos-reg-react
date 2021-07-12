@@ -1,7 +1,14 @@
 import React from "react";
 import PopupWithForm from "./PopupWithForm";
 
-function AddTeacherPopup({ isOpen, onClose, onTeacherAdd, buttonText }) {
+function AddTeacherPopup({
+  isOpen,
+  onClose,
+  onTeacherAdd,
+  buttonText,
+  currentTeacherData,
+}) {
+  console.log(currentTeacherData);
   const [name, setName] = React.useState();
   const [description, setDescription] = React.useState();
   const [price, setPrice] = React.useState();

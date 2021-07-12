@@ -54,8 +54,13 @@ function Card({
       >
         <button
           type="button"
-          className="card__trash-button"
+          className="card__button_action_delete card__button"
           onClick={handleCardDelete}
+        />
+
+        <button
+          type="button"
+          className="card__button card__button_action_edit"
         />
 
         <input
