@@ -41,6 +41,11 @@ function App() {
     setIsTeacherAddPopupOpen(true);
   };
 
+  const handleOpenTeacherEditPopup = (teacherData) => {
+    setAddTeacherButtonText("Изменить");
+    setIsTeacherAddPopupOpen(true);
+  };
+
   const handleTeacherBookPopupOpen = (teacher) => {
     setIsBookTeacherPopupOpen(true);
     setCurrentTeacher(teacher);
@@ -377,6 +382,7 @@ function App() {
                           onSelect={handleTeacherSelect}
                           onDeselect={handleTeacherDeselect}
                           selectedTeachersList={selectedTeachersList}
+                          onCardEdit={handleOpenTeacherEditPopup}
                         />
                       );
                     })

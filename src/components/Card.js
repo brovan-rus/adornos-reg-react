@@ -9,6 +9,7 @@ function Card({
   isRegistrationOpen,
   onSelect,
   onDeselect,
+  onCardEdit,
   selectedTeachersList,
 }) {
   const [isSelected, setIsSelected] = React.useState();
@@ -24,6 +25,10 @@ function Card({
 
   function handleCardDelete() {
     onCardDelete(teacher);
+  }
+
+  function handleCardEdit() {
+    onCardEdit(teacher);
   }
   const clients = teacher.clients ? teacher.clients.length : 0;
 
@@ -61,6 +66,7 @@ function Card({
         <button
           type="button"
           className="card__button card__button_action_edit"
+          onClick={handleCardEdit}
         />
 
         <input
