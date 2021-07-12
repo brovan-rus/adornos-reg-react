@@ -50,7 +50,6 @@ function App() {
   const handleOpenTeacherEditPopup = (teacherData) => {
     setAddTeacherButtonText("Изменить");
     setCurrentTeacherData(teacherData);
-    console.log(currentTeacherData);
     setIsTeacherEditPopupOpen(true);
   };
 
@@ -159,7 +158,6 @@ function App() {
       .then((currentUser) => {
         setIsLoggedIn(true);
         setCurrentUser(currentUser);
-        console.log(currentUser);
       })
       .then(closeAllPopups)
       .catch((e) => {
