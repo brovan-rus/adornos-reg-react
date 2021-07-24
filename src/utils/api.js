@@ -1,7 +1,8 @@
 import { handleResponse } from "./utils";
 
-const baseURL = "https://adornos-api.herokuapp.com";
-// const baseURL = "http://localhost:8000";
+// const baseURL = "https://adornos-api.herokuapp.com";
+const baseURL = "http://localhost:8000";
+// const baseURL = "https://api.adornos.ru";
 
 class Api {
   constructor(url) {
@@ -47,6 +48,15 @@ class Api {
         email: user.email,
         phone: user.phoneNumber,
       }),
+    }).then(handleResponse);
+  }
+
+  userAuth(token) {
+    return fetch(`${this._url}`, {
+      method: "GET",
+      headers: {
+        authorization: `Bearer ${token}`,
+      },
     }).then(handleResponse);
   }
 

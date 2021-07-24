@@ -152,6 +152,10 @@ function App() {
       });
   };
 
+  // const handleAuth = (token) => {
+  //
+  // }
+
   const handleLogin = (user) => {
     api
       .userLogin(user)
