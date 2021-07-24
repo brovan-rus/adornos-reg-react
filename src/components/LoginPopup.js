@@ -2,11 +2,11 @@ import React from "react";
 import PopupWithForm from "./PopupWithForm";
 
 function LoginPopup({ isOpen, onClose, onLogin, buttonText }) {
-  const [userName, setUserName] = React.useState(false);
+  const [email, setEmail] = React.useState(false);
   const [password, setPassword] = React.useState();
 
   const handleSetUserName = (e) => {
-    setUserName(e.target.value);
+    setEmail(e.target.value);
   };
   const handleSetPassword = (e) => {
     setPassword(e.target.value);
@@ -14,7 +14,7 @@ function LoginPopup({ isOpen, onClose, onLogin, buttonText }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     const user = {
-      userName: userName,
+      email: email,
       password: password,
     };
     onLogin(user);
@@ -22,7 +22,7 @@ function LoginPopup({ isOpen, onClose, onLogin, buttonText }) {
 
   React.useEffect(() => {
     setPassword("");
-    setUserName("");
+    setEmail("");
   }, [isOpen, buttonText]);
 
   return (
@@ -42,9 +42,9 @@ function LoginPopup({ isOpen, onClose, onLogin, buttonText }) {
         minLength="2"
         maxLength="30"
         type="text"
-        name="userName"
-        placeholder="Имя пользователя"
-        value={userName}
+        name="email"
+        placeholder="Адрес электронной почты"
+        value={email}
         onChange={handleSetUserName}
       />
 

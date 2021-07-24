@@ -53,7 +53,6 @@ class Api {
 
   userAuth(token) {
     return fetch(`${this._url}`, {
-      method: "GET",
       headers: {
         authorization: `Bearer ${token}`,
       },
@@ -67,7 +66,7 @@ class Api {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        userName: user.userName,
+        email: user.email,
         password: user.password,
       }),
     }).then(handleResponse);

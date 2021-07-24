@@ -15,7 +15,7 @@ import EditTeacherPopup from "./EditTeacherPopup";
 function App() {
   const [formattedPracticDate, setFormattedPracticDate] =
     React.useState(undefined);
-  const [currentUser, setCurrentUser] = React.useState({ isAmin: false });
+  const [currentUser, setCurrentUser] = React.useState({ isAdmin: false });
   const [bookTeacherButtonText, setBookTeacherButtonText] =
     React.useState("Записаться");
   const [addTeacherButtonText, setAddTeacherButtonText] =
@@ -41,7 +41,6 @@ function App() {
   const [isTeacherEditPopupOpen, setIsTeacherEditPopupOpen] =
     React.useState(false);
   const [currentTeacherData, setCurrentTeacherData] = React.useState({});
-
   const handleOpenAddTeacherPopup = () => {
     setAddTeacherButtonText("Добавить");
     setIsTeacherAddPopupOpen(true);
@@ -152,13 +151,10 @@ function App() {
       });
   };
 
-  // const handleAuth = (token) => {
-  //
-  // }
-
   const handleLogin = (user) => {
     api
       .userLogin(user)
+      .then(({ token }) => api.userAuth(token))
       .then((currentUser) => {
         setIsLoggedIn(true);
         setCurrentUser(currentUser);
