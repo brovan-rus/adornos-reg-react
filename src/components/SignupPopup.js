@@ -6,6 +6,20 @@ function SignupPopup({ isOpen, onClose, onSignup, buttonText }) {
   const [password, setPassword] = React.useState();
   const [passwordConfirm, setPasswordConfirm] = React.useState();
   const [name, setName] = React.useState();
+  const [phone, setPhone] = React.useState();
+  const [showPassword, setShowPassword] = React.useState(false);
+
+  const handleShowPassword = () => {
+    setShowPassword(true);
+  };
+
+  const handleHidePassword = () => {
+    setShowPassword(false);
+  };
+
+  const handleSetPhone = (e) => {
+    setPhone(e.target.value);
+  };
 
   const handleSetEmail = (e) => {
     setEmail(e.target.value);
@@ -32,7 +46,9 @@ function SignupPopup({ isOpen, onClose, onSignup, buttonText }) {
   React.useEffect(() => {
     setPassword("");
     setEmail("");
-  }, [isOpen, buttonText]);
+    setPasswordConfirm("");
+    setName("");
+  }, [isOpen]);
 
   return (
     <PopupWithForm
@@ -74,10 +90,30 @@ function SignupPopup({ isOpen, onClose, onSignup, buttonText }) {
         autoComplete="off"
         type="text"
         name="phone"
-        placeholder="Адрес электронной почты"
-        value={email}
-        onChange={handleSetEmail}
+        placeholder="Контактный телефон"
+        value={phone}
+        onChange={handleSetPhone}
       />
+
+      <div className="form__password-wrapper">
+        <span
+          className="form__password-icon"
+          onMouseOver={handleShowPassword}
+          onMouseLeave={handleHidePassword}
+        />
+
+        <input
+          className="form__input form__input_info_name form__input_type_password"
+          required
+          autoComplete="off"
+          minLength="2"
+          type={showPassword ? "text" : "password"}
+          name="password"
+          placeholder="Пароль"
+          value={password}
+          onChange={handleSetPassword}
+        />
+      </div>
 
       <input
         className="form__input form__input_info_name"
@@ -86,19 +122,7 @@ function SignupPopup({ isOpen, onClose, onSignup, buttonText }) {
         minLength="2"
         type="password"
         name="password"
-        placeholder="Пароль"
-        value={password}
-        onChange={handleSetPassword}
-      />
-
-      <input
-        className="form__input form__input_info_name"
-        required
-        autoComplete="off"
-        minLength="2"
-        type="password"
-        name="password"
-        placeholder="Пароль"
+        placeholder="Повторите пароль"
         value={passwordConfirm}
         onChange={handleSetPasswordConfirm}
       />

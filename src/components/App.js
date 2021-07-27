@@ -54,8 +54,11 @@ function App() {
 
   const handleSignup = (email, password) => {};
 
+  const handleOpenSignupPopup = () => {
+    setIsSignupPopupOpen(true);
+  };
+
   const logout = () => {
-    console.log("logging out");
     setCurrentUser({ isAdmin: false, isLoggedIn: false });
     localStorage.removeItem("jwt");
   };
@@ -367,8 +370,6 @@ function App() {
       .catch((e) => console.log(e));
   }, [currentUser]);
 
-  console.log(teachersList);
-
   React.useEffect(() => {
     if (localStorage.getItem("jwt")) {
       api
@@ -400,11 +401,10 @@ function App() {
           />
         )}
         <Header
-          isAdmin={currentUser.isAdmin}
-          handleLoginOpen={handleOpenLoginPopup}
           handleTeacherPopupOpen={handleOpenAddTeacherPopup}
           handleLoginPopupOpen={handleOpenLoginPopup}
           handleLogout={logout}
+          handleSignupPopoupOpen={handleOpenSignupPopup}
         />
         <main className="mdl-layout__content">
           <div className="page-content">
