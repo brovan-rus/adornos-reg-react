@@ -39,3 +39,6 @@
 @import url("blocks/form/__password-icon/form__password-icon.css");
 @import url("blocks/form/__input/_type/form__input_type_password.css");
 @import url("blocks/form/__password-wrapper/form__password-wrapper.css");
+@import url("blocks/form/__password-error/form__password-error.css");
+@import url("blocks/form/__password-error/_hidden/form__password-error_hidden.css");
+@import url("blocks/form/__input/_type/form__input_type_password-confirm.css");

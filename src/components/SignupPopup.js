@@ -1,13 +1,15 @@
 import React from "react";
 import PopupWithForm from "./PopupWithForm";
 
-function SignupPopup({ isOpen, onClose, onSignup, buttonText }) {
-  const [email, setEmail] = React.useState();
-  const [password, setPassword] = React.useState();
+function SignupPopup({ isOpen, onClose, onSignup }) {
+  const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
   const [passwordConfirm, setPasswordConfirm] = React.useState();
   const [name, setName] = React.useState();
   const [phone, setPhone] = React.useState();
   const [showPassword, setShowPassword] = React.useState(false);
+  const [showPasswordError, setShowPasswordError] = React.useState(false);
+  const buttonText = "Зарегистрироваться";
 
   const handleShowPassword = () => {
     setShowPassword(true);
@@ -27,6 +29,15 @@ function SignupPopup({ isOpen, onClose, onSignup, buttonText }) {
   const handleSetName = (e) => {
     setName(e.target.value);
   };
+
+  React.useEffect(() => {
+    if (password === passwordConfirm) {
+      setShowPasswordError(false);
+    } else {
+      setShowPasswordError(true);
+    }
+  }, [password, passwordConfirm]);
+
   const handleSetPassword = (e) => {
     setPassword(e.target.value);
   };
@@ -36,11 +47,15 @@ function SignupPopup({ isOpen, onClose, onSignup, buttonText }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const user = {
-      email: email,
-      password: password,
-    };
-    onSignup(user);
+    if (!showPasswordError) {
+      const user = {
+        email: email,
+        password: password,
+        name: name,
+        phone: phone,
+      };
+      onSignup(user);
+    }
   };
 
   React.useEffect(() => {
@@ -48,6 +63,7 @@ function SignupPopup({ isOpen, onClose, onSignup, buttonText }) {
     setEmail("");
     setPasswordConfirm("");
     setName("");
+    setPhone("");
   }, [isOpen]);
 
   return (
@@ -116,7 +132,7 @@ function SignupPopup({ isOpen, onClose, onSignup, buttonText }) {
       </div>
 
       <input
-        className="form__input form__input_info_name"
+        className="form__input form__input_info_name form__input_type_password-confirm"
         required
         autoComplete="off"
         minLength="2"
@@ -126,6 +142,15 @@ function SignupPopup({ isOpen, onClose, onSignup, buttonText }) {
         value={passwordConfirm}
         onChange={handleSetPasswordConfirm}
       />
+      <span
+        className={
+          showPasswordError
+            ? "form__password-error"
+            : "form__password-error form__password-error_hidden"
+        }
+      >
+        Введённые Вами пароли не совпадают
+      </span>
     </PopupWithForm>
   );
 }

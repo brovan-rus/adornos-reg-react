@@ -471,7 +471,6 @@ function App() {
           isOpen={isSignupPopupOpen}
           onClose={closeAllPopups}
           onSignup={handleSignup}
-          buttonText="Зарегистрироваться"
         />
         <BookTeacherPopup
           isOpen={isBookTeacherPopupOpen}
