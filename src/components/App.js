@@ -46,6 +46,13 @@ function App() {
     setIsTeacherAddPopupOpen(true);
   };
 
+  const logout = () => {
+    console.log("logging out");
+    setIsLoggedIn(false);
+    setCurrentUser({ isAdmin: false });
+    localStorage.removeItem("jwt");
+  };
+
   const handleOpenTeacherEditPopup = (teacherData) => {
     setAddTeacherButtonText("Изменить");
     setCurrentTeacherData(teacherData);
@@ -84,7 +91,8 @@ function App() {
     practicDate.setHours(11, 0);
     api
       .setDate(practicDate)
-      .then(() => {
+      .then(({ isRegistrationOpened }) => {
+        setIsRegistrationOpen(isRegistrationOpened);
         setDateOnPage(practicDate);
         api.resetUsersBookPossibilities().then(() => {
           api.resetAllTeachersBooking().then((updatedTeachersList) => {
@@ -154,10 +162,13 @@ function App() {
   const handleLogin = (user) => {
     api
       .userLogin(user)
-      .then(({ token }) => api.userAuth(token))
-      .then((currentUser) => {
-        setIsLoggedIn(true);
-        setCurrentUser(currentUser);
+      .then(({ token }) => {
+        localStorage.setItem("jwt", token);
+        api.userAuth(token).then((currentUser) => {
+          setIsLoggedIn(true);
+          setCurrentUser(currentUser);
+          console.log(currentUser);
+        });
       })
       .then(closeAllPopups)
       .catch((e) => {
@@ -322,19 +333,6 @@ function App() {
   };
 
   React.useEffect(() => {
-    const registrationStartDate = new Date(practicDate);
-    registrationStartDate.setDate(registrationStartDate.getDate() - 7);
-    if (
-      registrationStartDate - Date.now() < 0 &&
-      practicDate - Date.now() > 0
-    ) {
-      setIsRegistrationOpen(true);
-    } else {
-      setIsRegistrationOpen(false);
-    }
-  }, [practicDate, isLoggedIn]);
-
-  React.useEffect(() => {
     api
       .getTeachersList()
       .then((answer) => {
@@ -354,11 +352,34 @@ function App() {
 
     api
       .getDate()
-      .then((date) => {
-        setDateOnPage(new Date(date));
+      .then((data) => {
+        setIsRegistrationOpen(data.isRegistrationOpened);
+        setPracticDate(new Date(data.practicDate));
+        setDateOnPage(practicDate);
       })
       .catch((e) => console.log(e));
   }, [currentUser]);
+
+  React.useEffect(() => {
+    if (localStorage.getItem("jwt")) {
+      api
+        .userAuth(localStorage.getItem("jwt"))
+        .then((currentUser) => {
+          setIsLoggedIn(true);
+          setCurrentUser(currentUser);
+          console.log(currentUser);
+        })
+        .catch((e) => console.log(e));
+    }
+
+    api
+      .getDate()
+      .then((data) => {
+        setIsRegistrationOpen(data.isRegistrationOpened);
+        setDateOnPage(new Date(data.practicDate));
+      })
+      .catch((e) => console.log(e));
+  }, []);
 
   return (
     <div className="mdl-layout mdl-js-layout mdl-layout--fixed-header">
@@ -375,6 +396,7 @@ function App() {
         handleTeacherPopupOpen={handleOpenAddTeacherPopup}
         isLoggedIn={isLoggedIn}
         handleLoginPopupOpen={handleOpenLoginPopup}
+        handleLogout={logout}
       />
       <main className="mdl-layout__content">
         <div className="page-content">

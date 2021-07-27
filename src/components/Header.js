@@ -4,6 +4,7 @@ function Header({
   handleLoginPopupOpen,
   handleTeacherPopupOpen,
   isLoggedIn,
+  handleLogout,
 }) {
   return (
     <>
@@ -23,7 +24,11 @@ function Header({
             )}
 
             {isLoggedIn && (
-              <a className="mdl-navigation__link link" href="/">
+              <a
+                className="mdl-navigation__link link"
+                href="#"
+                onClick={handleLogout}
+              >
                 Выйти
               </a>
             )}
@@ -53,7 +58,11 @@ function Header({
           )}
 
           {isLoggedIn && (
-            <a className="mdl-navigation__link link" href="/">
+            <a
+              className="mdl-navigation__link link"
+              href="#"
+              onClick={handleLogout}
+            >
               Выйти
             </a>
           )}
