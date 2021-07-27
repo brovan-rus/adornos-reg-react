@@ -1,7 +1,17 @@
 .mdl-button_bottom-margin{
   margin-bottom: 10px;
+
 }
 
 .mdl-button_bottom-margin:last-child{
   margin-bottom: 0;
+}
+
+.mdl-button {
+  transition: opacity .4s ease-in;
+}
+
+
+.mdl-button:hover {
+  opacity: .9;
 }

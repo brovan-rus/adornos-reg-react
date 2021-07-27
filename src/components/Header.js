@@ -1,11 +1,13 @@
 import Logo from "./Logo";
+import { CurrentUserContext } from "../contexts/CurrentUserContext";
+import React from "react";
 function Header({
-  isAdmin,
   handleLoginPopupOpen,
   handleTeacherPopupOpen,
-  isLoggedIn,
   handleLogout,
+  handleSignupPopoupOpen,
 }) {
+  const { isAdmin, isLoggedIn } = React.useContext(CurrentUserContext);
   return (
     <>
       <header className="mdl-layout__header ">
@@ -13,6 +15,15 @@ function Header({
           <Logo />
           <h1 className="mdl-layout-title">Регистрация на практику</h1>
           <nav className="mdl-navigation mdl-layout--large-screen-only">
+            {!isLoggedIn && (
+              <a
+                href="#"
+                className="mdl-navigation__link link"
+                onClick={handleSignupPopoupOpen}
+              >
+                Зарегистрироваться
+              </a>
+            )}
             {!isLoggedIn && (
               <a
                 href="#"
@@ -46,8 +57,17 @@ function Header({
         </div>
       </header>
       <div className="mdl-layout__drawer mdl-layout--small-screen-only">
-        <span className="mdl-layout-title"></span>
+        <span className="mdl-layout-title" />
         <nav className="mdl-navigation">
+          {!isLoggedIn && (
+            <a
+              href="#"
+              className="mdl-navigation__link link"
+              onClick={handleSignupPopoupOpen}
+            >
+              Зарегистрироваться
+            </a>
+          )}
           {!isLoggedIn && (
             <a
               onClick={handleLoginPopupOpen}
@@ -76,16 +96,6 @@ function Header({
               Добавить преподавателя
             </a>
           )}
-
-          {/*{isAdmin && (*/}
-          {/*  <a*/}
-          {/*    href="#"*/}
-          {/*    className="mdl-navigation__link link"*/}
-          {/*    onClick={handleAddUserPopupOpen}*/}
-          {/*  >*/}
-          {/*    Добавить пользователя*/}
-          {/*  </a>*/}
-          {/*)}*/}
         </nav>
       </div>
     </>

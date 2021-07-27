@@ -11,11 +11,16 @@ import api from "../utils/api";
 import TeacherSelectSnackbar from "./TeacherSelectSnackbar";
 import BookTeacherPopup from "./BookTeacherPopup";
 import EditTeacherPopup from "./EditTeacherPopup";
+import SignupPopup from "./SignupPopup";
+import { CurrentUserContext } from "../contexts/CurrentUserContext";
 
 function App() {
   const [formattedPracticDate, setFormattedPracticDate] =
     React.useState(undefined);
-  const [currentUser, setCurrentUser] = React.useState({ isAdmin: false });
+  const [currentUser, setCurrentUser] = React.useState({
+    isAdmin: false,
+    isLoggedIn: false,
+  });
   const [bookTeacherButtonText, setBookTeacherButtonText] =
     React.useState("Записаться");
   const [addTeacherButtonText, setAddTeacherButtonText] =
@@ -30,7 +35,7 @@ function App() {
   const [isRegistrationOpen, setIsRegistrationOpen] = React.useState(false);
   const [isBookTeacherPopupOpen, setIsBookTeacherPopupOpen] =
     React.useState(false);
-  const [isLoggedIn, setIsLoggedIn] = React.useState(false);
+  // const [isLoggedIn, setIsLoggedIn] = React.useState(false);
   const [practicDate, setPracticDate] = React.useState();
   const [teachersList, setTeachersList] = React.useState([]);
   const [selectedTeachersList, setSelectedTeachersList] = React.useState([]);
@@ -40,16 +45,18 @@ function App() {
     React.useState("Изменить");
   const [isTeacherEditPopupOpen, setIsTeacherEditPopupOpen] =
     React.useState(false);
+  const [isSignupPopupOpen, setIsSignupPopupOpen] = React.useState(false);
   const [currentTeacherData, setCurrentTeacherData] = React.useState({});
   const handleOpenAddTeacherPopup = () => {
     setAddTeacherButtonText("Добавить");
     setIsTeacherAddPopupOpen(true);
   };
 
+  const handleSignup = (email, password) => {};
+
   const logout = () => {
     console.log("logging out");
-    setIsLoggedIn(false);
-    setCurrentUser({ isAdmin: false });
+    setCurrentUser({ isAdmin: false, isLoggedIn: false });
     localStorage.removeItem("jwt");
   };
 
@@ -79,6 +86,7 @@ function App() {
     setIsLoginPopupOpen(false);
     setIsBookTeacherPopupOpen(false);
     setIsTeacherEditPopupOpen(false);
+    setIsSignupPopupOpen(false);
   };
 
   const setDateOnPage = (date) => {
@@ -165,8 +173,7 @@ function App() {
       .then(({ token }) => {
         localStorage.setItem("jwt", token);
         api.userAuth(token).then((currentUser) => {
-          setIsLoggedIn(true);
-          setCurrentUser(currentUser);
+          setCurrentUser({ ...currentUser, isLoggedIn: true });
           console.log(currentUser);
         });
       })
@@ -360,13 +367,14 @@ function App() {
       .catch((e) => console.log(e));
   }, [currentUser]);
 
+  console.log(teachersList);
+
   React.useEffect(() => {
     if (localStorage.getItem("jwt")) {
       api
         .userAuth(localStorage.getItem("jwt"))
         .then((currentUser) => {
-          setIsLoggedIn(true);
-          setCurrentUser(currentUser);
+          setCurrentUser({ ...currentUser, isLoggedIn: true });
           console.log(currentUser);
         })
         .catch((e) => console.log(e));
@@ -382,108 +390,110 @@ function App() {
   }, []);
 
   return (
-    <div className="mdl-layout mdl-js-layout mdl-layout--fixed-header">
-      {currentUser.isAdmin && (
-        <TeacherSelectSnackbar
-          isOpen={true}
-          message={teacherSelectSnackbarMessage}
-          onApprove={handleCurrentTeacherListRenew}
+    <CurrentUserContext.Provider value={currentUser}>
+      <div className="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+        {currentUser.isAdmin && (
+          <TeacherSelectSnackbar
+            isOpen={true}
+            message={teacherSelectSnackbarMessage}
+            onApprove={handleCurrentTeacherListRenew}
+          />
+        )}
+        <Header
+          isAdmin={currentUser.isAdmin}
+          handleLoginOpen={handleOpenLoginPopup}
+          handleTeacherPopupOpen={handleOpenAddTeacherPopup}
+          handleLoginPopupOpen={handleOpenLoginPopup}
+          handleLogout={logout}
         />
-      )}
-      <Header
-        isAdmin={currentUser.isAdmin}
-        handleLoginOpen={handleOpenLoginPopup}
-        handleTeacherPopupOpen={handleOpenAddTeacherPopup}
-        isLoggedIn={isLoggedIn}
-        handleLoginPopupOpen={handleOpenLoginPopup}
-        handleLogout={logout}
-      />
-      <main className="mdl-layout__content">
-        <div className="page-content">
-          <div className="mdl-grid">
-            <Intro
-              date={formattedPracticDate}
-              isAdmin={currentUser.isAdmin}
-              handleOpenDateChangePopup={handleOpenDateChangePopup}
-              isRegistrationOpen={isRegistrationOpen}
-            />
-            <div className="mdl-cell--12-col">
-              <section className="cards">
-                {currentUser.isAdmin
-                  ? teachersList.map((teacher) => {
-                      return (
-                        <Card
-                          teacher={teacher}
-                          key={teacher._id}
-                          user={currentUser}
-                          isRegistrationOpen={isRegistrationOpen}
-                          onCardDelete={handleTeacherDel}
-                          isLoggedIn={isLoggedIn}
-                          onTeacherBook={handleTeacherBookPopupOpen}
-                          onTeacherUnbook={handleTeacherUnbook}
-                          onSelect={handleTeacherSelect}
-                          onDeselect={handleTeacherDeselect}
-                          selectedTeachersList={selectedTeachersList}
-                          onCardEdit={handleOpenTeacherEditPopup}
-                        />
-                      );
-                    })
-                  : selectedTeachersList.map((teacher) => {
-                      return (
-                        <Card
-                          teacher={teacher}
-                          key={teacher._id}
-                          user={currentUser}
-                          isRegistrationOpen={isRegistrationOpen}
-                          onCardDelete={handleTeacherDel}
-                          isLoggedIn={isLoggedIn}
-                          onTeacherBook={handleTeacherBookPopupOpen}
-                          onTeacherUnbook={handleTeacherUnbook}
-                          onSelect={handleTeacherSelect}
-                          onDeselect={handleTeacherDeselect}
-                          selectedTeachersList={selectedTeachersList}
-                        />
-                      );
-                    })}
-              </section>
+        <main className="mdl-layout__content">
+          <div className="page-content">
+            <div className="mdl-grid">
+              <Intro
+                date={formattedPracticDate}
+                handleOpenDateChangePopup={handleOpenDateChangePopup}
+                isRegistrationOpen={isRegistrationOpen}
+              />
+              <div className="mdl-cell--12-col">
+                <section className="cards">
+                  {currentUser.isAdmin
+                    ? teachersList.map((teacher) => {
+                        return (
+                          <Card
+                            teacher={teacher}
+                            key={teacher._id}
+                            isRegistrationOpen={isRegistrationOpen}
+                            onCardDelete={handleTeacherDel}
+                            onTeacherBook={handleTeacherBookPopupOpen}
+                            onTeacherUnbook={handleTeacherUnbook}
+                            onSelect={handleTeacherSelect}
+                            onDeselect={handleTeacherDeselect}
+                            selectedTeachersList={selectedTeachersList}
+                            onCardEdit={handleOpenTeacherEditPopup}
+                          />
+                        );
+                      })
+                    : selectedTeachersList.map((teacher) => {
+                        return (
+                          <Card
+                            teacher={teacher}
+                            key={teacher._id}
+                            isRegistrationOpen={isRegistrationOpen}
+                            onCardDelete={handleTeacherDel}
+                            onTeacherBook={handleTeacherBookPopupOpen}
+                            onTeacherUnbook={handleTeacherUnbook}
+                            onSelect={handleTeacherSelect}
+                            onDeselect={handleTeacherDeselect}
+                            selectedTeachersList={selectedTeachersList}
+                          />
+                        );
+                      })}
+                </section>
+              </div>
             </div>
           </div>
-        </div>
-      </main>
+        </main>
 
-      <AddTeacherPopup
-        isOpen={isTeacherAddPopupOpen}
-        onClose={closeAllPopups}
-        onTeacherAdd={handleAddTeacher}
-        buttonText={addTeacherButtonText}
-      />
-      <EditTeacherPopup
-        isOpen={isTeacherEditPopupOpen}
-        onClose={closeAllPopups}
-        onTeacherEdit={handleEditTeacher}
-        buttonText={editTeacherButtonText}
-        currentTeacherData={currentTeacherData}
-      />
-      <BookTeacherPopup
-        isOpen={isBookTeacherPopupOpen}
-        onClose={closeAllPopups}
-        onTeacherBook={handleTeacherBook}
-        buttonText={bookTeacherButtonText}
-        teacher={currentTeacher}
-      />
-      <LoginPopup
-        isOpen={isLoginPopupOpen}
-        onClose={closeAllPopups}
-        onLogin={handleLogin}
-        buttonText={loginButtonText}
-      />
-      <ChangeDatePopup
-        isOpen={isDateChangePopupOpen}
-        onClose={closeAllPopups}
-        onDateChange={handleChangeDate}
-        currentDate={practicDate}
-      />
-    </div>
+        <AddTeacherPopup
+          isOpen={isTeacherAddPopupOpen}
+          onClose={closeAllPopups}
+          onTeacherAdd={handleAddTeacher}
+          buttonText={addTeacherButtonText}
+        />
+        <EditTeacherPopup
+          isOpen={isTeacherEditPopupOpen}
+          onClose={closeAllPopups}
+          onTeacherEdit={handleEditTeacher}
+          buttonText={editTeacherButtonText}
+          currentTeacherData={currentTeacherData}
+        />
+        <SignupPopup
+          isOpen={isSignupPopupOpen}
+          onClose={closeAllPopups}
+          onSignup={handleSignup}
+          buttonText="Зарегистрироваться"
+        />
+        <BookTeacherPopup
+          isOpen={isBookTeacherPopupOpen}
+          onClose={closeAllPopups}
+          onTeacherBook={handleTeacherBook}
+          buttonText={bookTeacherButtonText}
+          teacher={currentTeacher}
+        />
+        <LoginPopup
+          isOpen={isLoginPopupOpen}
+          onClose={closeAllPopups}
+          onLogin={handleLogin}
+          buttonText={loginButtonText}
+        />
+        <ChangeDatePopup
+          isOpen={isDateChangePopupOpen}
+          onClose={closeAllPopups}
+          onDateChange={handleChangeDate}
+          currentDate={practicDate}
+        />
+      </div>
+    </CurrentUserContext.Provider>
   );
 }
 

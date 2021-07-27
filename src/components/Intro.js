@@ -1,9 +1,8 @@
-function Intro({
-  date,
-  isAdmin,
-  handleOpenDateChangePopup,
-  isRegistrationOpen,
-}) {
+import React from "react";
+import { CurrentUserContext } from "../contexts/CurrentUserContext";
+
+function Intro({ date, handleOpenDateChangePopup, isRegistrationOpen }) {
+  const { isAdmin } = React.useContext(CurrentUserContext);
   return (
     <section className="mdl-cell intro mdl-cell--12-col">
       <h2

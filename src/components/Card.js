@@ -1,8 +1,9 @@
 import React from "react";
 import ClientChip from "./ClientChip";
+import { CurrentUserContext } from "../contexts/CurrentUserContext";
+
 function Card({
   teacher,
-  user,
   onTeacherBook,
   onTeacherUnbook,
   onCardDelete,
@@ -12,6 +13,7 @@ function Card({
   onCardEdit,
   selectedTeachersList,
 }) {
+  const { isAdmin } = React.useContext(CurrentUserContext);
   const [isSelected, setIsSelected] = React.useState();
 
   React.useEffect(() => {
@@ -54,9 +56,7 @@ function Card({
 
   return (
     <div className="mdl-card assistent-card mdl-shadow--2dp card">
-      <div
-        className={`card__controls ${!user.isAdmin && "card__controls_hidden"}`}
-      >
+      <div className={`card__controls ${!isAdmin && "card__controls_hidden"}`}>
         <button
           type="button"
           className="card__button_action_delete card__button"
@@ -117,7 +117,7 @@ function Card({
         </div>
 
         <div>
-          {user.isAdmin &&
+          {isAdmin &&
             clients > 0 &&
             teacher.clients.map((client) => {
               return (
