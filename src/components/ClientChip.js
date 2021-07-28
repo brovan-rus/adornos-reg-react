@@ -15,10 +15,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function ClientChip({ onDelete, title }) {
-  const handleChipDelete = () => {
-    console.log("Chip to delete");
-  };
-
   const classes = useStyles();
   return (
     <div className={classes.root}>

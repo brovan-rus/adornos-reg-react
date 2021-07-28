@@ -4,7 +4,8 @@ import { CurrentUserContext } from "../contexts/CurrentUserContext";
 
 function Card({
   teacher,
-  onTeacherBook,
+  onTeacherBookLoginedUser,
+  onTeacherBookUnloginedUser,
   onTeacherUnbook,
   onCardDelete,
   isRegistrationOpen,
@@ -13,7 +14,8 @@ function Card({
   onCardEdit,
   selectedTeachersList,
 }) {
-  const { isAdmin } = React.useContext(CurrentUserContext);
+  const { isAdmin, isLoggedIn } = React.useContext(CurrentUserContext);
+  const currentUser = React.useContext(CurrentUserContext);
   const [isSelected, setIsSelected] = React.useState();
 
   React.useEffect(() => {
@@ -32,13 +34,24 @@ function Card({
   function handleCardEdit() {
     onCardEdit(teacher);
   }
+
   const clients = teacher.clients ? teacher.clients.length : 0;
 
+  let isUnbookButtonHidden = !teacher.clients.some(
+    (client) => client._id === currentUser._id
+  );
+
   const isButtonActive =
-    (!(clients > 1) || teacher.price === 0) && isRegistrationOpen;
+    (!(clients > 1) || teacher.price === 0) &&
+    isRegistrationOpen &&
+    isUnbookButtonHidden;
 
   const handleBook = () => {
-    onTeacherBook(teacher);
+    if (!isLoggedIn || isAdmin) {
+      onTeacherBookUnloginedUser(teacher);
+    } else {
+      onTeacherBookLoginedUser(teacher, currentUser);
+    }
   };
 
   const handleSelect = () => {
@@ -114,6 +127,13 @@ function Card({
           >
             {clients > 1 && teacher.price > 0 ? "Запись закрыта" : "Записаться"}
           </button>
+          <button
+            className="mdl-button mdl-js-button mdl-button_bottom-margin mdl-button--raised mdl-js-ripple-effect mdl-button--accent card__mdl-button_color_red "
+            hidden={isUnbookButtonHidden}
+            onClick={() => handleUnbook(currentUser._id)}
+          >
+            Отказаться
+          </button>
         </div>
 
         <div>
@@ -125,7 +145,7 @@ function Card({
                   key={client.id}
                   className="assistent-card--person"
                   title={client.email}
-                  onDelete={() => handleUnbook(client.id)}
+                  onDelete={() => handleUnbook(client._id)}
                 />
               );
             })}

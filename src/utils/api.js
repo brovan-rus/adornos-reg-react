@@ -37,6 +37,21 @@ class Api {
     }).then(handleResponse);
   }
 
+  regUser(user) {
+    return fetch(`${this._url}/sign-up`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: user.name,
+        email: user.email,
+        phone: user.phone,
+        password: user.password,
+      }),
+    }).then(handleResponse);
+  }
+
   addUser(user) {
     return fetch(`${this._url}/sign-up`, {
       method: "POST",
@@ -44,10 +59,19 @@ class Api {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        name: user.fullName,
+        name: user.name,
         email: user.email,
-        phone: user.phoneNumber,
+        phone: user.phone,
       }),
+    }).then(handleResponse);
+  }
+
+  getUserByEmail(email) {
+    return fetch(`${this._url}/user/${email}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
     }).then(handleResponse);
   }
 
@@ -99,14 +123,14 @@ class Api {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        clientId: clientId,
+        _id: clientId,
       }),
     }).then(handleResponse);
   }
 
-  clearTeachersClients(teacherId, teacherData) {
-    return fetch(`${this._url}/teacher/${teacherId}`, {
-      method: "PATCH",
+  clearTeachersClients(teacherId) {
+    return fetch(`${this._url}/teacher/${teacherId}/clients`, {
+      method: "DELETE",
       headers: {
         "Content-Type": "application/json",
       },

@@ -25,9 +25,9 @@ function BookTeacherPopup({
   const handleSubmit = (e) => {
     e.preventDefault();
     const user = {
-      fullName: name,
+      name: name,
       email: email,
-      phoneNumber: phoneNumber,
+      phone: phoneNumber,
     };
     onTeacherBook(teacher, user);
   };

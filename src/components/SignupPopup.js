@@ -1,7 +1,7 @@
 import React from "react";
 import PopupWithForm from "./PopupWithForm";
 
-function SignupPopup({ isOpen, onClose, onSignup }) {
+function SignupPopup({ isOpen, onClose, onSignup, buttonText }) {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [passwordConfirm, setPasswordConfirm] = React.useState();
@@ -9,7 +9,6 @@ function SignupPopup({ isOpen, onClose, onSignup }) {
   const [phone, setPhone] = React.useState();
   const [showPassword, setShowPassword] = React.useState(false);
   const [showPasswordError, setShowPasswordError] = React.useState(false);
-  const buttonText = "Зарегистрироваться";
 
   const handleShowPassword = () => {
     setShowPassword(true);

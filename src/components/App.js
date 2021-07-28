@@ -26,6 +26,8 @@ function App() {
   const [addTeacherButtonText, setAddTeacherButtonText] =
     React.useState("Добавить");
   const [loginButtonText, setLoginButtonText] = React.useState("Войти");
+  const [signupButtonText, setSignupButtonText] =
+    React.useState("Зарегистрироваться");
   const [isTeacherAddPopupOpen, setIsTeacherAddPopupOpen] =
     React.useState(false);
   const [isLoginPopupOpen, setIsLoginPopupOpen] = React.useState(false);
@@ -35,7 +37,6 @@ function App() {
   const [isRegistrationOpen, setIsRegistrationOpen] = React.useState(false);
   const [isBookTeacherPopupOpen, setIsBookTeacherPopupOpen] =
     React.useState(false);
-  // const [isLoggedIn, setIsLoggedIn] = React.useState(false);
   const [practicDate, setPracticDate] = React.useState();
   const [teachersList, setTeachersList] = React.useState([]);
   const [selectedTeachersList, setSelectedTeachersList] = React.useState([]);
@@ -52,10 +53,26 @@ function App() {
     setIsTeacherAddPopupOpen(true);
   };
 
-  const handleSignup = (email, password) => {};
+  const handleSignup = (user) => {
+    setSignupButtonText("Отправка...");
+    api
+      .regUser(user)
+      .then((res) => console.log(res))
+      .then(() =>
+        setTimeout(
+          () => setSignupButtonText("Вы успешно зарегистрированы"),
+          500
+        )
+      )
+      .then(() => setTimeout(() => closeAllPopups(), 500))
+      .catch(() =>
+        setTimeout(() => setSignupButtonText("Произошла ошибка"), 500)
+      );
+  };
 
   const handleOpenSignupPopup = () => {
     setIsSignupPopupOpen(true);
+    setSignupButtonText("Зарегистрироваться");
   };
 
   const logout = () => {
@@ -187,51 +204,58 @@ function App() {
       });
   };
 
+  const addClientBooking = (teacher, bookingClient) => {
+    return new Promise((resolve, reject) => {
+      api
+        .addClient(teacher._id, bookingClient)
+        .then((updatedTeacherCard) => {
+          teacher.price > 0
+            ? api
+                .userRemoveBookPossibility(bookingClient._id)
+                .then((res) => console.log(res))
+                .catch((e) => console.log(e))
+            : api
+                .userRemoveBookPossibility(bookingClient._id)
+                .then(() => api.userRemoveBookPossibility(bookingClient._id))
+                .then((res) => console.log(res))
+                .catch((e) => console.log(e));
+          setSelectedTeachersList((state) =>
+            state.map((t) => (t._id === teacher._id ? updatedTeacherCard : t))
+          );
+          setTeachersList((state) =>
+            state.map((t) => (t._id === teacher._id ? updatedTeacherCard : t))
+          );
+          resolve();
+        })
+        .catch((e) => reject(e));
+    });
+  };
+
   const handleTeacherBook = (teacher, user) => {
-    api
-      .addUser(user)
-      .then((bookingClient) => {
-        if (bookingClient.tickets < 1) {
+    api.getUserByEmail(user.email).then((existingUser) => {
+      if (!existingUser) {
+        api
+          .addUser(user)
+          .then((newUser) => {
+            addClientBooking(teacher, newUser).then(closeAllPopups);
+          })
+          .catch((e) => console.log(e));
+      } else {
+        console.log(existingUser);
+        if (existingUser.tickets < 1) {
           setBookTeacherButtonText(
             "Вы достигли максимального количества записей."
           );
-        } else {
-          api
-            .addClient(teacher._id, bookingClient)
-            .then((updatedTeacherCard) => {
-              teacher.price > 0
-                ? api
-                    .userRemoveBookPossibility(bookingClient._id)
-                    .then((res) => console.log(res))
-                    .catch((e) => console.log(e))
-                : api
-                    .userRemoveBookPossibility(bookingClient._id)
-                    .then(() =>
-                      api.userRemoveBookPossibility(bookingClient._id)
-                    )
-                    .then((res) => console.log(res))
-                    .catch((e) => console.log(e));
-              setSelectedTeachersList((state) =>
-                state.map((t) =>
-                  t._id === teacher._id ? updatedTeacherCard : t
-                )
-              );
-              setTeachersList((state) =>
-                state.map((t) =>
-                  t._id === teacher._id ? updatedTeacherCard : t
-                )
-              );
-            })
-            .then(closeAllPopups)
-            .catch((e) => {
-              console.log(e);
-              setBookTeacherButtonText(
-                "Вы уже записаны к этому преподавателю!"
-              );
-            });
+          return;
         }
-      })
-      .catch((e) => console.log(e));
+        addClientBooking(teacher, existingUser)
+          .then(closeAllPopups)
+          .catch((e) => {
+            console.log(e);
+            setBookTeacherButtonText("Вы уже записаны к этому преподавателю!");
+          });
+      }
+    });
   };
 
   const handleTeacherUnbook = async (teacher, clientId) => {
@@ -242,11 +266,17 @@ function App() {
             api
               .removeClient(teacher._id, clientId)
               .then((updatedTeacherCard) => {
-                setTeachersList((state) =>
-                  state.map((t) =>
-                    t._id === teacher._id ? updatedTeacherCard : t
-                  )
-                );
+                currentUser.isAdmin
+                  ? setTeachersList((state) =>
+                      state.map((t) =>
+                        t._id === teacher._id ? updatedTeacherCard : t
+                      )
+                    )
+                  : setSelectedTeachersList((state) =>
+                      state.map((t) =>
+                        t._id === teacher._id ? updatedTeacherCard : t
+                      )
+                    );
               })
               .catch((e) => console.log(e))
           )
@@ -258,11 +288,17 @@ function App() {
             api
               .removeClient(teacher._id, clientId)
               .then((updatedTeacherCard) => {
-                setTeachersList((state) =>
-                  state.map((t) =>
-                    t._id === teacher._id ? updatedTeacherCard : t
-                  )
-                );
+                currentUser.isAdmin
+                  ? setTeachersList((state) =>
+                      state.map((t) =>
+                        t._id === teacher._id ? updatedTeacherCard : t
+                      )
+                    )
+                  : setSelectedTeachersList((state) =>
+                      state.map((t) =>
+                        t._id === teacher._id ? updatedTeacherCard : t
+                      )
+                    );
               })
               .catch((e) => console.log(e))
           )
@@ -303,7 +339,7 @@ function App() {
             deletedTeacher.clients.forEach((client) => {
               console.log(client);
               api
-                .userAddBookPossibility(client.id)
+                .userAddBookPossibility(client._id)
                 .then((res) => console.log(res))
                 .catch((e) => console.log(e));
             });
@@ -424,7 +460,10 @@ function App() {
                             key={teacher._id}
                             isRegistrationOpen={isRegistrationOpen}
                             onCardDelete={handleTeacherDel}
-                            onTeacherBook={handleTeacherBookPopupOpen}
+                            onTeacherBookUnloginedUser={
+                              handleTeacherBookPopupOpen
+                            }
+                            onTeacherBookLoginedUser={handleTeacherBook}
                             onTeacherUnbook={handleTeacherUnbook}
                             onSelect={handleTeacherSelect}
                             onDeselect={handleTeacherDeselect}
@@ -440,7 +479,10 @@ function App() {
                             key={teacher._id}
                             isRegistrationOpen={isRegistrationOpen}
                             onCardDelete={handleTeacherDel}
-                            onTeacherBook={handleTeacherBookPopupOpen}
+                            onTeacherBookUnloginedUser={
+                              handleTeacherBookPopupOpen
+                            }
+                            onTeacherBookLoginedUser={handleTeacherBook}
                             onTeacherUnbook={handleTeacherUnbook}
                             onSelect={handleTeacherSelect}
                             onDeselect={handleTeacherDeselect}
@@ -471,6 +513,7 @@ function App() {
           isOpen={isSignupPopupOpen}
           onClose={closeAllPopups}
           onSignup={handleSignup}
+          buttonText={signupButtonText}
         />
         <BookTeacherPopup
           isOpen={isBookTeacherPopupOpen}
