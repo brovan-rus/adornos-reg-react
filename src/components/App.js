@@ -234,12 +234,18 @@ function App() {
   const handleTeacherBook = (teacher, user) => {
     api.getUserByEmail(user.email).then((existingUser) => {
       if (!existingUser) {
-        api
-          .addUser(user)
-          .then((newUser) => {
-            addClientBooking(teacher, newUser).then(closeAllPopups);
-          })
-          .catch((e) => console.log(e));
+        api.addUser(user).then((newUser) => {
+          addClientBooking(teacher, newUser)
+            .then(closeAllPopups)
+            .catch((e) => {
+              if (e.message === "Достигнуто максимальное количество записей") {
+                setBookTeacherButtonText(
+                  "К данному преподавателю достигнуто максимальное количество записей"
+                );
+                return;
+              }
+            });
+        });
       } else {
         console.log(existingUser);
         if (existingUser.tickets < 1) {
@@ -251,7 +257,12 @@ function App() {
         addClientBooking(teacher, existingUser)
           .then(closeAllPopups)
           .catch((e) => {
-            console.log(e);
+            if (e.message === "Достигнуто максимальное количество записей") {
+              setBookTeacherButtonText(
+                "К данному преподавателю достигнуто максимальное количество записей"
+              );
+              return;
+            }
             setBookTeacherButtonText("Вы уже записаны к этому преподавателю!");
           });
       }
@@ -412,7 +423,6 @@ function App() {
         .userAuth(localStorage.getItem("jwt"))
         .then((currentUser) => {
           setCurrentUser({ ...currentUser, isLoggedIn: true });
-          console.log(currentUser);
         })
         .catch((e) => console.log(e));
     }

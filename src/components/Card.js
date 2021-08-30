@@ -142,7 +142,7 @@ function Card({
             teacher.clients.map((client) => {
               return (
                 <ClientChip
-                  key={client.id}
+                  key={client._id}
                   className="assistent-card--person"
                   title={client.email}
                   onDelete={() => handleUnbook(client._id)}
