@@ -1,8 +1,8 @@
 import { handleResponse } from "./utils";
 
 // const baseURL = "https://adornos-api.herokuapp.com";
-const baseURL = "http://localhost:8000";
-// const baseURL = "https://api.adornos.ru";
+// const baseURL = "http://localhost:8000";
+const baseURL = "https://api.adornos.ru";
 
 class Api {
   constructor(url) {

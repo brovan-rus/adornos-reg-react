@@ -18,9 +18,9 @@ export const dateFormat = (d) => {
   return `${d.getDate()} ${monthName} ${d.getFullYear()}`;
 };
 
-export function handleResponse(res) {
+export async function handleResponse(res) {
   if (!res.ok) {
-    return Promise.reject(`Ошибка ${res.status}`);
+    return Promise.reject(await res.json());
   } else {
     return res.json();
   }
