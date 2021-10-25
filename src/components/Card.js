@@ -14,7 +14,7 @@ function Card({
   onCardEdit,
   selectedTeachersList,
 }) {
-  const { isAdmin, isLoggedIn } = React.useContext(CurrentUserContext);
+  const { isAdmin, isLoggedIn, tickets } = React.useContext(CurrentUserContext);
   const currentUser = React.useContext(CurrentUserContext);
   const [isSelected, setIsSelected] = React.useState();
 
@@ -44,7 +44,7 @@ function Card({
   const isButtonActive =
     (!(clients > 1) || teacher.price === 0) &&
     isRegistrationOpen &&
-    isUnbookButtonHidden;
+    (tickets > 0 || tickets === undefined);
 
   const handleBook = () => {
     if (!isLoggedIn || isAdmin) {
@@ -62,6 +62,8 @@ function Card({
     }
     setIsSelected(!isSelected);
   };
+
+  console.log(tickets);
 
   const handleUnbook = (clientId) => {
     onTeacherUnbook(teacher, clientId);

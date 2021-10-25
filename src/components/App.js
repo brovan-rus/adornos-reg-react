@@ -232,6 +232,7 @@ function App() {
   };
 
   const handleTeacherBook = (teacher, user) => {
+    setCurrentUser({ ...currentUser, tickets: currentUser.tickets - 1 });
     api.getUserByEmail(user.email).then((existingUser) => {
       if (!existingUser) {
         api.addUser(user).then((newUser) => {
@@ -270,6 +271,7 @@ function App() {
   };
 
   const handleTeacherUnbook = async (teacher, clientId) => {
+    setCurrentUser({ ...currentUser, tickets: currentUser.tickets + 1 });
     teacher.price > 0
       ? api
           .userAddBookPossibility(clientId)
