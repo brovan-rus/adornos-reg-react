@@ -14,7 +14,7 @@ function LoginPopup({ isOpen, onClose, onLogin, buttonText }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     const user = {
-      email: email,
+      email: email.toLowerCase(),
       password: password,
     };
     onLogin(user);

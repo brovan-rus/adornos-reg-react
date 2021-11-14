@@ -194,7 +194,6 @@ function App() {
         localStorage.setItem("jwt", token);
         api.userAuth(token).then((currentUser) => {
           setCurrentUser({ ...currentUser, isLoggedIn: true });
-          console.log(currentUser);
         });
       })
       .then(closeAllPopups)

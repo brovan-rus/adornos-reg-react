@@ -63,8 +63,6 @@ function Card({
     setIsSelected(!isSelected);
   };
 
-  console.log(tickets);
-
   const handleUnbook = (clientId) => {
     onTeacherUnbook(teacher, clientId);
   };

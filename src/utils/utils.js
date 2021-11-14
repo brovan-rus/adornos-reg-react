@@ -1,17 +1,4 @@
-const months = [
-  "января",
-  "февраля",
-  "марта",
-  "апреля",
-  "мая",
-  "июня",
-  "июля",
-  "августа",
-  "сентября",
-  "октября",
-  "ноября",
-  "декабря",
-];
+import { months } from "./constants";
 
 export const dateFormat = (d) => {
   const monthName = months[d.getMonth()];
